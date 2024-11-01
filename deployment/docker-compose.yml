@@ -1,0 +1,110 @@
+services:
+  admin:
+    build:
+      context: ../cmd/admin
+      dockerfile: dockerfile
+    container_name: admin_service
+    depends_on:
+      - admin_postgres
+      - gateway
+
+  gateway:
+    build:
+      context: ../cmd/gateway
+      dockerfile: dockerfile
+    container_name: gateway_service
+    depends_on:
+      - redis
+    ports:
+      - 10000:10000
+
+  books:
+    build:
+      context: ../cmd/books
+      dockerfile: dockerfile
+    container_name: books_service
+    depends_on:
+      - books_postgres
+      - gateway
+
+  logging:
+    build:
+      context: ../cmd/logging
+      dockerfile: dockerfile
+    container_name: logging_service
+    depends_on:
+      - logging_mongodb
+      - gateway
+
+  user:
+    build:
+      context: ../cmd/user
+      dockerfile: dockerfile
+    container_name: user_service
+    depends_on:
+      - user_postgres
+      - gateway
+
+  admin_postgres:
+    image: postgres:alpine
+    container_name: admin_postgres
+    environment:
+      POSTGRES_USER: surya
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: book_store_admin
+    volumes:
+      - admin_volume:/var/lib/postgresql/data
+
+  gateway_postgres:
+    image: postgres:alpine
+    container_name: gateway_postgres
+    environment:
+      POSTGRES_USER: surya
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: book_store_gateway
+    volumes:
+      - gateway_postgres:/var/lib/postgresql/data
+
+  logging_mongodb:
+    image: mongo:latest
+    container_name: logging_mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: surya
+      MONGO_INITDB_ROOT_PASSWORD: 123
+      MONGO_INITDB_DATABASE: book_store_logging
+    volumes:
+      - logging_mongodb:/data/db
+
+  user_postgres:
+    image: postgres:alpine
+    container_name: user_postgres
+    environment:
+      POSTGRES_USER: surya
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: book_store_gateway
+    volumes:
+      - user_postgres:/var/lib/postgresql/data
+
+  books_postgres:
+    image: postgres:alpine
+    container_name: books_postgres
+    environment:
+      POSTGRES_USER: surya
+      POSTGRES_PASSWORD: 123
+      POSTGRES_DB: book_store_books
+    volumes:
+      - books_postgres:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    container_name: redis
+    volumes:
+      - redis:/data
+
+volumes:
+  admin_volume:
+  gateway_postgres:
+  logging_mongodb:
+  books_postgres:
+  user_postgres:
+  redis:
