@@ -1,0 +1,43 @@
+syntax = "proto3";
+
+package "book_store.books_service";
+
+import "books_messages.proto"
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+service Books {
+    rpc GetCategories() returns () {
+        option(google.api.http) = {
+            get: "/v1/categories"
+        }
+        option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Get Categories."
+            description: "Returns all different categories in the book store."
+            tags: "Books."
+        }
+    } 
+
+    rpc UpdateCategories() returns () {
+        option(google.api.http) = {
+            post: "/v1/categories"
+            body: "*"
+        }
+        option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Update Category."
+            description: "Updates a particular category in the book store."
+            tags: "Books."
+        }
+    }
+
+    rpc GetBook() returns () {
+        option(google.api.http) = {
+            get: "/v1/categories/{id}"
+        }
+        option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Get Books."
+            description: "Returns all books in a particular category in the book store."
+            tags: "Books."
+        }
+    } 
+}

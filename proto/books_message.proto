@@ -1,0 +1,10 @@
+syntax = "proto3";
+
+package "book_store.books_service";
+
+message GetCategoriesRequest {}
+message GetCategoriesResponse {}
+message UpdateCategoriesRequest {}
+message UpdateCategoriesResponse {}
+message GetBookRequest {}
+message GetBookResponse {}
