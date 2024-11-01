@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-package "book_store.admin_service";
+package "book_store.user_service";
 
 message UserLoginRequest {}
 message UserLoginResponse {}
