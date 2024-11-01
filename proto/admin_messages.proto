@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package "book_store.admin_service";
+
+message AdminLoginRequest {}
+message AdminLoginResponse {}
+message AdminCreateRequest {}
+message AdminCreateResponse {}
+
+message NewBookRequest {}
+message NewBookResponse {}
+message UpdateBookRequest {}
+message UpdateBookResponse {}
+message DeleteBookRequest {}
+message DeleteBookResponse {}
+
+message NewCategoryRequest {}
+message NewCategoryResponse {}
+message UpdateCategoryRequest {}
+message UpdateCategoryResponse {}
+message DeleteCategoryRequest {}
+message DeleteCategoryResponse {}
+
+message SalesReportRequest {}
+message SalesReportResponse {}
