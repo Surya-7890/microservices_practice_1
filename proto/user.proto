@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+service UserAuth {
+    rpc UserLogin(UserLoginRequest) return (UserLoginResponse) {
+        option(google.api.http) = {
+            post: "/v1/user/login"
+            body: "*"
+        }
+        option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "User login."
+            description: "The user is sends credentials for logging in as a user. The user is logged in if the credentials are valid."
+            tags: "User Auth."
+        }
+    }
+
+    rpc UserSignup(UserSignupRequest) returns (UserSignupResponse) {
+        option(google.api.http) = {
+            post: "/v1/user/signup"
+            body: "*"
+        }
+        option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Create User."
+            description: "Creates a new user. All values are required."
+            tags: "User Auth."
+        }
+    }
+}
+
+service UserProfile {
+    rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+        option(google.api.http) = {
+            get: "/v1/user/profile"
+            body: "*"
+        }
+        option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Get User Details."
+            description: "Get the details of the logged in user."
+            tags: "User Profile."
+        }
+    }
+
+    rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
+        option(google.api.http) = {
+            patch: "/v1/user/profile"
+            body: "*"
+        }
+        option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Update An User."
+            description: "Update an existing user."
+            tags: "User Profile."
+        }
+    }
+
+    rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
+        option(google.api.http) = {
+            delete: "/v1/user/profile"
+            body: "*"
+        }
+        option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Delete A User."
+            description: "Delete a user."
+            tags: "User Profile."
+        }
+    }
+}
+
+service UserComments {
+    rpc PostComment(PostCommentRequest) returns (PostCommentResponse) {
+        option(google.api.http) = {
+            post: "/v1/comments/{book_id}"
+            body: "*"
+        }
+        option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Post Comment."
+            description: "Creates a new comment on a particular book."
+            tags: "User Comments."
+        }
+    }
+
+    rpc UpdateComment(UpdateCommentRequest) returns (UpdateCommentRequest) {
+        option(google.api.http) = {
+            patch: "/v1/comments/{book_id}"
+            body: "*"
+        }
+        option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+            summary: "Update Comment."
+            description: "Updates an existion comment post on a particular book."
+            tags: "User Comments."
+        }
+    }
+}
