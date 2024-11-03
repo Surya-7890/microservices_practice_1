@@ -1,0 +1,349 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "user.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "UserAuth"
+    },
+    {
+      "name": "UserProfile"
+    },
+    {
+      "name": "UserComments"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/comments/{id}": {
+      "delete": {
+        "summary": "Delete A Comment.",
+        "description": "Delete a comment.",
+        "operationId": "UserComments_DeleteComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/user_serviceDeleteCommentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "User Comments."
+        ]
+      },
+      "post": {
+        "summary": "Post Comment.",
+        "description": "Creates a new comment on a particular book.",
+        "operationId": "UserComments_PostComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/user_servicePostCommentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserCommentsPostCommentBody"
+            }
+          }
+        ],
+        "tags": [
+          "User Comments."
+        ]
+      },
+      "patch": {
+        "summary": "Update Comment.",
+        "description": "Updates an existion comment post on a particular book.",
+        "operationId": "UserComments_UpdateComment",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/user_serviceUpdateCommentResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/UserCommentsUpdateCommentBody"
+            }
+          }
+        ],
+        "tags": [
+          "User Comments."
+        ]
+      }
+    },
+    "/v1/user/login": {
+      "post": {
+        "summary": "User login.",
+        "description": "The user is sends credentials for logging in as a user. The user is logged in if the credentials are valid.",
+        "operationId": "UserAuth_UserLogin",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/user_serviceUserLoginResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/user_serviceUserLoginRequest"
+            }
+          }
+        ],
+        "tags": [
+          "User Auth."
+        ]
+      }
+    },
+    "/v1/user/profile": {
+      "get": {
+        "summary": "Get User Details.",
+        "description": "Get the details of the logged in user.",
+        "operationId": "UserProfile_GetUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/user_serviceGetUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "User Profile."
+        ]
+      },
+      "delete": {
+        "summary": "Delete A User.",
+        "description": "Delete a user.",
+        "operationId": "UserProfile_DeleteUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/user_serviceDeleteUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "tags": [
+          "User Profile."
+        ]
+      },
+      "patch": {
+        "summary": "Update An User.",
+        "description": "Update an existing user.",
+        "operationId": "UserProfile_UpdateUser",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/user_serviceUpdateUserResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/user_serviceUpdateUserRequest"
+            }
+          }
+        ],
+        "tags": [
+          "User Profile."
+        ]
+      }
+    },
+    "/v1/user/signup": {
+      "post": {
+        "summary": "Create User.",
+        "description": "Creates a new user. All values are required.",
+        "operationId": "UserAuth_UserSignup",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/user_serviceUserSignupResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/user_serviceUserSignupRequest"
+            }
+          }
+        ],
+        "tags": [
+          "User Auth."
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "UserCommentsPostCommentBody": {
+      "type": "object"
+    },
+    "UserCommentsUpdateCommentBody": {
+      "type": "object"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "user_serviceDeleteCommentResponse": {
+      "type": "object"
+    },
+    "user_serviceDeleteUserResponse": {
+      "type": "object"
+    },
+    "user_serviceGetUserResponse": {
+      "type": "object"
+    },
+    "user_servicePostCommentResponse": {
+      "type": "object"
+    },
+    "user_serviceUpdateCommentResponse": {
+      "type": "object"
+    },
+    "user_serviceUpdateUserRequest": {
+      "type": "object"
+    },
+    "user_serviceUpdateUserResponse": {
+      "type": "object"
+    },
+    "user_serviceUserLoginRequest": {
+      "type": "object"
+    },
+    "user_serviceUserLoginResponse": {
+      "type": "object"
+    },
+    "user_serviceUserSignupRequest": {
+      "type": "object"
+    },
+    "user_serviceUserSignupResponse": {
+      "type": "object"
+    }
+  }
+}

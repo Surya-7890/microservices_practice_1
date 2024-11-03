@@ -16,6 +16,6 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
 FROM scratch
 
 EXPOSE 10000
-COPY --from=builder /app/config.yml /
+COPY --from=builder /app/config/config.yml /
 COPY --from=builder /bin/app .
 CMD [ "./app" ]

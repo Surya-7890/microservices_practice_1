@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package book_store.books_service;
+
+option go_package = "github.com/Surya-7890/book_store/proto/gen";
+
+message GetCategoriesRequest {
+    string id = 1;
+}
+message GetCategoriesResponse {}
+message UpdateCategoriesRequest {}
+message UpdateCategoriesResponse {}
+message GetBookRequest {
+    string id = 1;
+    string c_id = 2;
+}
+message GetBookResponse {}
+message GetBooksRequest {
+    string id = 1;
+}
+message GetBooksResponse {}

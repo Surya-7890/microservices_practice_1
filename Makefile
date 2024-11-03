@@ -19,3 +19,12 @@ stop:
 .PHONY: clean
 clean:
 	cd $(COMPOSE_DIR) && docker compose down --volumes --remove-orphans
+
+.PHONY: buf-gen
+buf-gen: buf-build
+	buf generate
+	go run move_gen_files.go
+
+.PHONY: buf-build
+buf-build:
+	buf build

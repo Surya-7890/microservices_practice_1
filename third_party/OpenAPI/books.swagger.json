@@ -1,0 +1,201 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "books.proto",
+    "version": "version not set"
+  },
+  "tags": [
+    {
+      "name": "Books"
+    }
+  ],
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/categories": {
+      "post": {
+        "summary": "Update Category.",
+        "description": "Updates a particular category in the book store.",
+        "operationId": "Books_UpdateCategories",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/books_serviceUpdateCategoriesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/books_serviceUpdateCategoriesRequest"
+            }
+          }
+        ],
+        "tags": [
+          "Books."
+        ]
+      }
+    },
+    "/v1/categories/{cId}/books/{id}": {
+      "get": {
+        "summary": "Get Books.",
+        "description": "Returns all books in a particular category in the book store.",
+        "operationId": "Books_GetBook",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/books_serviceGetBookResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "cId",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Books."
+        ]
+      }
+    },
+    "/v1/categories/{id}": {
+      "get": {
+        "summary": "Get Categories.",
+        "description": "Returns all different categories in the book store.",
+        "operationId": "Books_GetCategories",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/books_serviceGetCategoriesResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Books."
+        ]
+      }
+    },
+    "/v1/categories/{id}/books": {
+      "get": {
+        "summary": "Get Books.",
+        "description": "Returns all books in a particular category in the book store.",
+        "operationId": "Books_GetBooks",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/books_serviceGetBooksResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "tags": [
+          "Books."
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "books_serviceGetBookResponse": {
+      "type": "object"
+    },
+    "books_serviceGetBooksResponse": {
+      "type": "object"
+    },
+    "books_serviceGetCategoriesResponse": {
+      "type": "object"
+    },
+    "books_serviceUpdateCategoriesRequest": {
+      "type": "object"
+    },
+    "books_serviceUpdateCategoriesResponse": {
+      "type": "object"
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    }
+  }
+}
