@@ -26,6 +26,14 @@ func setupAdminEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts [
 	if err != nil {
 		panic(err)
 	}
+	err = gen.RegisterBookCategoriesHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{admin_host, admin_port}, ":"), dialOpts)
+	if err != nil {
+		panic(err)
+	}
+	err = gen.RegisterSalesReportHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{admin_host, admin_port}, ":"), dialOpts)
+	if err != nil {
+		panic(err)
+	}
 }
 
 func setupBooksEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption, wg *sync.WaitGroup) {
@@ -33,11 +41,7 @@ func setupBooksEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts [
 	books_host := viper.GetString("books.host")
 	books_port := viper.GetString("books.port")
 
-	err := gen.RegisterBookCategoriesHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{books_host, books_port}, ":"), dialOpts)
-	if err != nil {
-		panic(err)
-	}
-	err = gen.RegisterBooksHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{books_host, books_port}, ":"), dialOpts)
+	err := gen.RegisterBooksHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{books_host, books_port}, ":"), dialOpts)
 	if err != nil {
 		panic(err)
 	}

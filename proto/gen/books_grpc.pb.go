@@ -19,10 +19,9 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	Books_GetCategories_FullMethodName    = "/book_store.books_service.Books/GetCategories"
-	Books_UpdateCategories_FullMethodName = "/book_store.books_service.Books/UpdateCategories"
-	Books_GetBooks_FullMethodName         = "/book_store.books_service.Books/GetBooks"
-	Books_GetBook_FullMethodName          = "/book_store.books_service.Books/GetBook"
+	Books_GetCategories_FullMethodName = "/book_store.books_service.Books/GetCategories"
+	Books_GetBooks_FullMethodName      = "/book_store.books_service.Books/GetBooks"
+	Books_GetBook_FullMethodName       = "/book_store.books_service.Books/GetBook"
 )
 
 // BooksClient is the client API for Books service.
@@ -30,7 +29,6 @@ const (
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
 type BooksClient interface {
 	GetCategories(ctx context.Context, in *GetCategoriesRequest, opts ...grpc.CallOption) (*GetCategoriesResponse, error)
-	UpdateCategories(ctx context.Context, in *UpdateCategoriesRequest, opts ...grpc.CallOption) (*UpdateCategoriesResponse, error)
 	GetBooks(ctx context.Context, in *GetBooksRequest, opts ...grpc.CallOption) (*GetBooksResponse, error)
 	GetBook(ctx context.Context, in *GetBookRequest, opts ...grpc.CallOption) (*GetBookResponse, error)
 }
@@ -47,16 +45,6 @@ func (c *booksClient) GetCategories(ctx context.Context, in *GetCategoriesReques
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(GetCategoriesResponse)
 	err := c.cc.Invoke(ctx, Books_GetCategories_FullMethodName, in, out, cOpts...)
-	if err != nil {
-		return nil, err
-	}
-	return out, nil
-}
-
-func (c *booksClient) UpdateCategories(ctx context.Context, in *UpdateCategoriesRequest, opts ...grpc.CallOption) (*UpdateCategoriesResponse, error) {
-	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
-	out := new(UpdateCategoriesResponse)
-	err := c.cc.Invoke(ctx, Books_UpdateCategories_FullMethodName, in, out, cOpts...)
 	if err != nil {
 		return nil, err
 	}
@@ -88,7 +76,6 @@ func (c *booksClient) GetBook(ctx context.Context, in *GetBookRequest, opts ...g
 // for forward compatibility.
 type BooksServer interface {
 	GetCategories(context.Context, *GetCategoriesRequest) (*GetCategoriesResponse, error)
-	UpdateCategories(context.Context, *UpdateCategoriesRequest) (*UpdateCategoriesResponse, error)
 	GetBooks(context.Context, *GetBooksRequest) (*GetBooksResponse, error)
 	GetBook(context.Context, *GetBookRequest) (*GetBookResponse, error)
 }
@@ -102,9 +89,6 @@ type UnimplementedBooksServer struct{}
 
 func (UnimplementedBooksServer) GetCategories(context.Context, *GetCategoriesRequest) (*GetCategoriesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCategories not implemented")
-}
-func (UnimplementedBooksServer) UpdateCategories(context.Context, *UpdateCategoriesRequest) (*UpdateCategoriesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpdateCategories not implemented")
 }
 func (UnimplementedBooksServer) GetBooks(context.Context, *GetBooksRequest) (*GetBooksResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetBooks not implemented")
@@ -146,24 +130,6 @@ func _Books_GetCategories_Handler(srv interface{}, ctx context.Context, dec func
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(BooksServer).GetCategories(ctx, req.(*GetCategoriesRequest))
-	}
-	return interceptor(ctx, in, info, handler)
-}
-
-func _Books_UpdateCategories_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpdateCategoriesRequest)
-	if err := dec(in); err != nil {
-		return nil, err
-	}
-	if interceptor == nil {
-		return srv.(BooksServer).UpdateCategories(ctx, in)
-	}
-	info := &grpc.UnaryServerInfo{
-		Server:     srv,
-		FullMethod: Books_UpdateCategories_FullMethodName,
-	}
-	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(BooksServer).UpdateCategories(ctx, req.(*UpdateCategoriesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -214,10 +180,6 @@ var Books_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "GetCategories",
 			Handler:    _Books_GetCategories_Handler,
-		},
-		{
-			MethodName: "UpdateCategories",
-			Handler:    _Books_UpdateCategories_Handler,
 		},
 		{
 			MethodName: "GetBooks",
