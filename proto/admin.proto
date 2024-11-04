@@ -1,123 +1,76 @@
 syntax = "proto3";
 
-package "book_store.admin_service";
+package book_store.admin_service;
 
 import "admin_messages.proto";
 import "google/api/annotations.proto";
-import "protoc-gen-openapiv2/options/annotations.proto";
+
+option go_package = "github.com/Surya-7890/book_store/proto/gen";
 
 service AdminAuth {
-    rpc AdminLogin(AdminLoginRequest) return (AdminLoginResponse) {
+    rpc AdminLogin(AdminLoginRequest) returns (AdminLoginResponse) {
         option(google.api.http) = {
-            post: "/v1/admin/login"
-            body: "*"
-        }
-        option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-            summary: "Admin login."
-            description: "The user is sends credentials for logging in as the admin. The user is logged in if the credentials are valid."
-            tags: "Admin Auth."
-        }
+            post: "/v1/admin/login";
+            body: "*";
+        };
     }
 
     rpc AdminCreate(AdminCreateRequest) returns (AdminCreateResponse) {
         option(google.api.http) = {
-            post: "/v1/admin/create"
-            body: "*"
-        }
-        option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-            summary: "Create Admin."
-            description: "Creates a new admin. This can only be done by  an admin."
-            tags: "Admin Auth."
-        }
+            post: "/v1/admin/create";
+            body: "*";
+        };
     }
 }
 
 service AdminBooks {
     rpc NewBook(NewBookRequest) returns (NewBookResponse) {
         option(google.api.http) = {
-            post: "/v1/books"
-            body: "*"
-        }
-        option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-            summary: "Add New Book."
-            description: "Add a new book to the store. Essential values must be provided."
-            tags: "Admin Books."
-        }
+            post: "/v1/books";
+            body: "*";
+        };
     }
 
     rpc UpdateBooks(UpdateBookRequest) returns (UpdateBookResponse) {
         option(google.api.http) = {
-            patch: "/v1/books/{id}"
-            body: "*"
-        }
-        option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-            summary: "Update A Book."
-            description: "Update an existing book using the book id. Essential values and book ID must be provided."
-            tags: "Admin Books."
-        }
+            patch: "/v1/books";
+            body: "*";
+        };
     }
 
     rpc DeleteBooks(DeleteBookRequest) returns (DeleteBookResponse) {
         option(google.api.http) = {
-            delete: "/v1/books/{id}"
-            body: "*"
-        }
-        option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-            summary: "Delete A Book."
-            description: "Delete a book from the store. Book ID must be provided"
-            tags: "Admin Books."
-        }
+            delete: "/v1/books/{id}";
+        };
     }
 }
 
 service BookCategories {
     rpc CreateCategory(NewCategoryRequest) returns (NewCategoryResponse) {
         option(google.api.http) = {
-            post: "/v1/books/categories"
-            body: "*"
-        }
-        option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-            summary: "Add A New Category."
-            description: "Add a new category to the store. Essential values must be provided."
-            tags: "Book Categories."
-        }
+            post: "/v1/books/categories";
+            body: "*";
+        };
     }
 
     rpc UpdateCategory(UpdateCategoryRequest) returns (UpdateCategoryResponse) {
         option(google.api.http) = {
-            patch: "/v1/books/categories/{id}"
-            body: "*"
-        }
-        option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-            summary: "Update A Category."
-            description: "Update an existing Categories. Essential values must be provided."
-            tags: "Book Categories."
-        }
+            patch: "/v1/books/categories";
+            body: "*";
+        };
     }
 
     rpc DeleteCategory(DeleteCategoryRequest) returns (DeleteCategoryResponse) {
         option(google.api.http) = {
-            delete: "/v1/books/categories/{id}"
-            body: "*"
-        }
-        option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-            summary: "Delete A Category."
-            description: "Delete a category from the store. Category ID must be provided"
-            tags: "Book Categories."
-        }
+            delete: "/v1/books/categories/{id}";
+        };
     }
 }
 
 service SalesReport {
     rpc GetReport(SalesReportRequest) returns (SalesReportResponse) {
         option(google.api.http) = {
-            get: "/v1/report"
-            body: "*"
-        }
-        option(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
-            summary: "Total Sales."
-            description: "Get the total sales of books in the book store."
-            tags: "Book Sales."
-        }
+            get: "/v1/report";
+        };
     }
 }

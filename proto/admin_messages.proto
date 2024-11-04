@@ -1,6 +1,8 @@
 syntax = "proto3";
 
-package "book_store.admin_service";
+package book_store.admin_service;
+
+option go_package = "github.com/Surya-7890/book_store/proto/gen";
 
 message AdminLoginRequest {}
 message AdminLoginResponse {}
@@ -11,14 +13,18 @@ message NewBookRequest {}
 message NewBookResponse {}
 message UpdateBookRequest {}
 message UpdateBookResponse {}
-message DeleteBookRequest {}
+message DeleteBookRequest {
+    string id = 1;
+}
 message DeleteBookResponse {}
 
 message NewCategoryRequest {}
 message NewCategoryResponse {}
 message UpdateCategoryRequest {}
 message UpdateCategoryResponse {}
-message DeleteCategoryRequest {}
+message DeleteCategoryRequest {
+    string id = 1;
+}
 message DeleteCategoryResponse {}
 
 message SalesReportRequest {}

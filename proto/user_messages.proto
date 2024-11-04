@@ -1,0 +1,30 @@
+syntax = "proto3";
+
+package book_store.user_service;
+
+option go_package = "github.com/Surya-7890/book_store/proto/gen";
+
+message UserLoginRequest {}
+message UserLoginResponse {}
+message UserSignupRequest {}
+message UserSignupResponse {}
+
+message GetUserRequest {}
+message GetUserResponse {}
+message UpdateUserRequest {}
+message UpdateUserResponse {}
+message DeleteUserRequest {}
+message DeleteUserResponse {}
+
+message PostCommentRequest {
+    string id = 1;
+}
+message PostCommentResponse {}
+message UpdateCommentRequest {
+    string id = 1;
+}
+message UpdateCommentResponse {}
+message DeleteCommentRequest {
+    string id = 1;
+}
+message DeleteCommentResponse {}

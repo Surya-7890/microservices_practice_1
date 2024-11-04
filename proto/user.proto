@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package book_store.user_service;
+
+import "user_messages.proto";
+import "google/api/annotations.proto";
+
+option go_package = "github.com/Surya-7890/book_store/proto/gen";
+
+service UserAuth {
+    rpc UserLogin(UserLoginRequest) returns (UserLoginResponse) {
+        option(google.api.http) = {
+            post: "/v1/user/login";
+            body: "*";
+        };
+    }
+
+    rpc UserSignup(UserSignupRequest) returns (UserSignupResponse) {
+        option(google.api.http) = {
+            post: "/v1/user/signup";
+            body: "*";
+        };
+    }
+}
+
+service UserProfile {
+    rpc GetUser(GetUserRequest) returns (GetUserResponse) {
+        option(google.api.http) = {
+            get: "/v1/user/profile";
+        };
+    }
+
+    rpc UpdateUser(UpdateUserRequest) returns (UpdateUserResponse) {
+        option(google.api.http) = {
+            patch: "/v1/user/profile";
+            body: "*";
+        };
+    }
+
+    rpc DeleteUser(DeleteUserRequest) returns (DeleteUserResponse) {
+        option(google.api.http) = {
+            delete: "/v1/user/profile";
+        };
+    }
+}
+
+service UserComments {
+    rpc PostComment(PostCommentRequest) returns (PostCommentResponse) {
+        option(google.api.http) = {
+            post: "/v1/comments/{id}";
+            body: "*";
+        };
+    }
+
+    rpc UpdateComment(UpdateCommentRequest) returns (UpdateCommentResponse) {
+        option(google.api.http) = {
+            patch: "/v1/comments/{id}";
+            body: "*";
+        };
+    }
+
+    rpc DeleteComment(DeleteCommentRequest) returns (DeleteCommentResponse) {
+        option(google.api.http) = {
+            delete: "/v1/comments/{id}";
+        };
+    }
+}

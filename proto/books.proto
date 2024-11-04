@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package book_store.books_service;
+
+import "books_messages.proto";
+import "google/api/annotations.proto";
+
+option go_package = "github.com/Surya-7890/book_store/proto/gen";
+
+service Books {
+    rpc GetCategories(GetCategoriesRequest) returns (GetCategoriesResponse) {
+        option(google.api.http) = {
+            get: "/v1/categories/{id}";
+        };
+    }
+
+    rpc GetBooks(GetBooksRequest) returns (GetBooksResponse) {
+        option(google.api.http) = {
+            get: "/v1/categories/{id}/books";
+        };
+    } 
+
+    rpc GetBook(GetBookRequest) returns (GetBookResponse) {
+        option(google.api.http) = {
+            get: "/v1/categories/{c_id}/books/{id}";
+        };
+    } 
+}

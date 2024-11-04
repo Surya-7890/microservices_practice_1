@@ -1,0 +1,11 @@
+user:
+  host: user_service
+  port: 6000
+
+admin:
+  host: admin_service
+  port: 7000
+
+books:
+  host: books_service
+  port: 8000
