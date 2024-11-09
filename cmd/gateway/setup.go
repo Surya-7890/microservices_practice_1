@@ -5,7 +5,6 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/Surya-7890/book_store/gateway/config"
 	"github.com/Surya-7890/book_store/gateway/gen"
 	gwruntime "github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/spf13/viper"
@@ -67,7 +66,6 @@ func setupUserEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []
 }
 
 func setup(gw *gwruntime.ServeMux) {
-	config.LoadConfig()
 	ctx:= context.Background()
 	dialOpts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 	
