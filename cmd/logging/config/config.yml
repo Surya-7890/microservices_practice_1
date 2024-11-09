@@ -2,3 +2,7 @@ kafka:
   address: kafka:9092
   brokers:
     - kafka:9092
+  readers:
+    error: error-log
+    info: info-log
+    warning: warning-log

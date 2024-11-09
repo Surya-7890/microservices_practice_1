@@ -7,13 +7,14 @@ import (
 	"time"
 
 	"github.com/Surya-7890/book_store/gateway/config"
+	_kafka "github.com/Surya-7890/book_store/gateway/kafka"
 	gwruntime "github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/segmentio/kafka-go"
 )
 
 func init() {
 	config.LoadConfig()
-	createKafkaTopics([]string{"logging"})
+	_kafka.CreateTopics()
 }
 
 func main() {
@@ -23,11 +24,11 @@ func main() {
 	mux := http.NewServeMux()
 	mux.Handle("/", gw)
 
-	writer := createNewWriter()
+	writer := _kafka.CreateWriters()
 	go func() {
 		for {
-			err := writer.WriteMessages(context.Background(), kafka.Message{
-				Key: []byte("sample"),
+			err := writer.Info.WriteMessages(context.Background(), kafka.Message{
+				Key:   []byte("sample"),
 				Value: []byte("sample testing"),
 			})
 			if err != nil {
@@ -37,10 +38,10 @@ func main() {
 			time.Sleep(5 * time.Second)
 		}
 	}()
-	
+
 	s := http.Server{
 		Handler: mux,
-		Addr: ":10000",
+		Addr:    ":10000",
 	}
 
 	err := s.ListenAndServe()

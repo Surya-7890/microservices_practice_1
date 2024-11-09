@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"strings"
-	"sync"
 
 	"github.com/Surya-7890/book_store/gateway/gen"
 	gwruntime "github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
@@ -12,8 +11,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func setupAdminEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption, wg *sync.WaitGroup) {
-	defer wg.Done()
+func setupAdminEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption) {
 	admin_host := viper.GetString("admin.host")
 	admin_port := viper.GetString("admin.port")
 
@@ -35,8 +33,7 @@ func setupAdminEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts [
 	}
 }
 
-func setupBooksEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption, wg *sync.WaitGroup) {
-	defer wg.Done()
+func setupBooksEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption) {
 	books_host := viper.GetString("books.host")
 	books_port := viper.GetString("books.port")
 
@@ -46,8 +43,7 @@ func setupBooksEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts [
 	}
 }
 
-func setupUserEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption, wg *sync.WaitGroup) {
-	defer wg.Done()
+func setupUserEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption) {
 	user_host := viper.GetString("user.host")
 	user_port := viper.GetString("user.port")
 
@@ -66,13 +62,10 @@ func setupUserEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []
 }
 
 func setup(gw *gwruntime.ServeMux) {
-	ctx:= context.Background()
+	ctx := context.Background()
 	dialOpts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
-	
-	wg := &sync.WaitGroup{}
-	wg.Add(3)
-	go setupAdminEndpoints(ctx, gw, dialOpts, wg)
-	go setupBooksEndpoints(ctx, gw, dialOpts, wg)
-	go setupUserEndpoints(ctx, gw, dialOpts, wg)
-	wg.Wait()
+
+	setupAdminEndpoints(ctx, gw, dialOpts)
+	setupBooksEndpoints(ctx, gw, dialOpts)
+	setupUserEndpoints(ctx, gw, dialOpts)
 }
