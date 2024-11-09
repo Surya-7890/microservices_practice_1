@@ -6,7 +6,7 @@ RUN go mod tidy
 
 # Stage 2 ~ Builder
 FROM golang:1.23.2-alpine AS builder
-COPY --from=modules /go/pkg /go/pkg
+COPY --from=modules /go/pkg /go/pkgz
 WORKDIR /app
 COPY . .
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
@@ -16,6 +16,6 @@ RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
 FROM scratch
 
 EXPOSE 9000
-COPY --from=builder /app/config.yml /
+COPY --from=builder /app/config/config.yml /
 COPY --from=builder /bin/app .
 CMD [ "./app" ]
