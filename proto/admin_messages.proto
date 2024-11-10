@@ -4,10 +4,20 @@ package book_store.admin_service;
 
 option go_package = "github.com/Surya-7890/book_store/proto/gen";
 
-message AdminLoginRequest {}
-message AdminLoginResponse {}
-message AdminCreateRequest {}
-message AdminCreateResponse {}
+message AdminLoginRequest {
+    string username = 1;
+    string password = 2;
+}
+message AdminLoginResponse {
+    string status = 1;
+}
+message AdminCreateRequest {
+    string username = 1;
+    string password = 2;
+}
+message AdminCreateResponse {
+    string status = 1;
+}
 
 message NewBookRequest {}
 message NewBookResponse {}
