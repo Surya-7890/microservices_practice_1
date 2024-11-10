@@ -7,7 +7,7 @@ import (
 )
 
 type ModifyCategoriesService struct {
-	*gen.UnimplementedModifyCategoriesServer
+	gen.UnimplementedModifyCategoriesServer
 }
 
 func (m *ModifyCategoriesService) CreateCategory(context.Context, *gen.NewCategoryRequest) (*gen.NewCategoryResponse, error) {

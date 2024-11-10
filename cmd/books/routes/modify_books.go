@@ -7,7 +7,7 @@ import (
 )
 
 type ModifyBooksService struct {
-	*gen.UnimplementedModifyBooksServer
+	gen.UnimplementedModifyBooksServer
 }
 
 func (m *ModifyBooksService) DeleteBooks(ctx context.Context, req *gen.DeleteBookRequest) (*gen.DeleteBookResponse, error) {
