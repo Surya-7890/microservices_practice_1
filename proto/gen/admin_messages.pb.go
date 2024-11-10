@@ -216,26 +216,28 @@ func (x *AdminCreateResponse) GetStatus() string {
 	return ""
 }
 
-type NewBookRequest struct {
+type VerifyAdminRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+
+	Username string `protobuf:"bytes,1,opt,name=username,proto3" json:"username,omitempty"`
 }
 
-func (x *NewBookRequest) Reset() {
-	*x = NewBookRequest{}
+func (x *VerifyAdminRequest) Reset() {
+	*x = VerifyAdminRequest{}
 	mi := &file_admin_messages_proto_msgTypes[4]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *NewBookRequest) String() string {
+func (x *VerifyAdminRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*NewBookRequest) ProtoMessage() {}
+func (*VerifyAdminRequest) ProtoMessage() {}
 
-func (x *NewBookRequest) ProtoReflect() protoreflect.Message {
+func (x *VerifyAdminRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_admin_messages_proto_msgTypes[4]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -247,31 +249,41 @@ func (x *NewBookRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use NewBookRequest.ProtoReflect.Descriptor instead.
-func (*NewBookRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use VerifyAdminRequest.ProtoReflect.Descriptor instead.
+func (*VerifyAdminRequest) Descriptor() ([]byte, []int) {
 	return file_admin_messages_proto_rawDescGZIP(), []int{4}
 }
 
-type NewBookResponse struct {
+func (x *VerifyAdminRequest) GetUsername() string {
+	if x != nil {
+		return x.Username
+	}
+	return ""
+}
+
+type VerifyAdminResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
+
+	Status string `protobuf:"bytes,1,opt,name=status,proto3" json:"status,omitempty"`
+	Result bool   `protobuf:"varint,2,opt,name=result,proto3" json:"result,omitempty"`
 }
 
-func (x *NewBookResponse) Reset() {
-	*x = NewBookResponse{}
+func (x *VerifyAdminResponse) Reset() {
+	*x = VerifyAdminResponse{}
 	mi := &file_admin_messages_proto_msgTypes[5]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
 
-func (x *NewBookResponse) String() string {
+func (x *VerifyAdminResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*NewBookResponse) ProtoMessage() {}
+func (*VerifyAdminResponse) ProtoMessage() {}
 
-func (x *NewBookResponse) ProtoReflect() protoreflect.Message {
+func (x *VerifyAdminResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_admin_messages_proto_msgTypes[5]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -283,459 +295,23 @@ func (x *NewBookResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use NewBookResponse.ProtoReflect.Descriptor instead.
-func (*NewBookResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use VerifyAdminResponse.ProtoReflect.Descriptor instead.
+func (*VerifyAdminResponse) Descriptor() ([]byte, []int) {
 	return file_admin_messages_proto_rawDescGZIP(), []int{5}
 }
 
-type UpdateBookRequest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *UpdateBookRequest) Reset() {
-	*x = UpdateBookRequest{}
-	mi := &file_admin_messages_proto_msgTypes[6]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateBookRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateBookRequest) ProtoMessage() {}
-
-func (x *UpdateBookRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_messages_proto_msgTypes[6]
+func (x *VerifyAdminResponse) GetStatus() string {
 	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateBookRequest.ProtoReflect.Descriptor instead.
-func (*UpdateBookRequest) Descriptor() ([]byte, []int) {
-	return file_admin_messages_proto_rawDescGZIP(), []int{6}
-}
-
-type UpdateBookResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *UpdateBookResponse) Reset() {
-	*x = UpdateBookResponse{}
-	mi := &file_admin_messages_proto_msgTypes[7]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateBookResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateBookResponse) ProtoMessage() {}
-
-func (x *UpdateBookResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_messages_proto_msgTypes[7]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateBookResponse.ProtoReflect.Descriptor instead.
-func (*UpdateBookResponse) Descriptor() ([]byte, []int) {
-	return file_admin_messages_proto_rawDescGZIP(), []int{7}
-}
-
-type DeleteBookRequest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-}
-
-func (x *DeleteBookRequest) Reset() {
-	*x = DeleteBookRequest{}
-	mi := &file_admin_messages_proto_msgTypes[8]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteBookRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteBookRequest) ProtoMessage() {}
-
-func (x *DeleteBookRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_messages_proto_msgTypes[8]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteBookRequest.ProtoReflect.Descriptor instead.
-func (*DeleteBookRequest) Descriptor() ([]byte, []int) {
-	return file_admin_messages_proto_rawDescGZIP(), []int{8}
-}
-
-func (x *DeleteBookRequest) GetId() string {
-	if x != nil {
-		return x.Id
+		return x.Status
 	}
 	return ""
 }
 
-type DeleteBookResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *DeleteBookResponse) Reset() {
-	*x = DeleteBookResponse{}
-	mi := &file_admin_messages_proto_msgTypes[9]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteBookResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteBookResponse) ProtoMessage() {}
-
-func (x *DeleteBookResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_messages_proto_msgTypes[9]
+func (x *VerifyAdminResponse) GetResult() bool {
 	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
+		return x.Result
 	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteBookResponse.ProtoReflect.Descriptor instead.
-func (*DeleteBookResponse) Descriptor() ([]byte, []int) {
-	return file_admin_messages_proto_rawDescGZIP(), []int{9}
-}
-
-type NewCategoryRequest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *NewCategoryRequest) Reset() {
-	*x = NewCategoryRequest{}
-	mi := &file_admin_messages_proto_msgTypes[10]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *NewCategoryRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*NewCategoryRequest) ProtoMessage() {}
-
-func (x *NewCategoryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_messages_proto_msgTypes[10]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use NewCategoryRequest.ProtoReflect.Descriptor instead.
-func (*NewCategoryRequest) Descriptor() ([]byte, []int) {
-	return file_admin_messages_proto_rawDescGZIP(), []int{10}
-}
-
-type NewCategoryResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *NewCategoryResponse) Reset() {
-	*x = NewCategoryResponse{}
-	mi := &file_admin_messages_proto_msgTypes[11]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *NewCategoryResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*NewCategoryResponse) ProtoMessage() {}
-
-func (x *NewCategoryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_messages_proto_msgTypes[11]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use NewCategoryResponse.ProtoReflect.Descriptor instead.
-func (*NewCategoryResponse) Descriptor() ([]byte, []int) {
-	return file_admin_messages_proto_rawDescGZIP(), []int{11}
-}
-
-type UpdateCategoryRequest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *UpdateCategoryRequest) Reset() {
-	*x = UpdateCategoryRequest{}
-	mi := &file_admin_messages_proto_msgTypes[12]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateCategoryRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateCategoryRequest) ProtoMessage() {}
-
-func (x *UpdateCategoryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_messages_proto_msgTypes[12]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateCategoryRequest.ProtoReflect.Descriptor instead.
-func (*UpdateCategoryRequest) Descriptor() ([]byte, []int) {
-	return file_admin_messages_proto_rawDescGZIP(), []int{12}
-}
-
-type UpdateCategoryResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *UpdateCategoryResponse) Reset() {
-	*x = UpdateCategoryResponse{}
-	mi := &file_admin_messages_proto_msgTypes[13]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateCategoryResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateCategoryResponse) ProtoMessage() {}
-
-func (x *UpdateCategoryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_messages_proto_msgTypes[13]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateCategoryResponse.ProtoReflect.Descriptor instead.
-func (*UpdateCategoryResponse) Descriptor() ([]byte, []int) {
-	return file_admin_messages_proto_rawDescGZIP(), []int{13}
-}
-
-type DeleteCategoryRequest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-}
-
-func (x *DeleteCategoryRequest) Reset() {
-	*x = DeleteCategoryRequest{}
-	mi := &file_admin_messages_proto_msgTypes[14]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteCategoryRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteCategoryRequest) ProtoMessage() {}
-
-func (x *DeleteCategoryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_messages_proto_msgTypes[14]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteCategoryRequest.ProtoReflect.Descriptor instead.
-func (*DeleteCategoryRequest) Descriptor() ([]byte, []int) {
-	return file_admin_messages_proto_rawDescGZIP(), []int{14}
-}
-
-func (x *DeleteCategoryRequest) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-type DeleteCategoryResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *DeleteCategoryResponse) Reset() {
-	*x = DeleteCategoryResponse{}
-	mi := &file_admin_messages_proto_msgTypes[15]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteCategoryResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteCategoryResponse) ProtoMessage() {}
-
-func (x *DeleteCategoryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_messages_proto_msgTypes[15]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteCategoryResponse.ProtoReflect.Descriptor instead.
-func (*DeleteCategoryResponse) Descriptor() ([]byte, []int) {
-	return file_admin_messages_proto_rawDescGZIP(), []int{15}
-}
-
-type SalesReportRequest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *SalesReportRequest) Reset() {
-	*x = SalesReportRequest{}
-	mi := &file_admin_messages_proto_msgTypes[16]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SalesReportRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SalesReportRequest) ProtoMessage() {}
-
-func (x *SalesReportRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_messages_proto_msgTypes[16]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SalesReportRequest.ProtoReflect.Descriptor instead.
-func (*SalesReportRequest) Descriptor() ([]byte, []int) {
-	return file_admin_messages_proto_rawDescGZIP(), []int{16}
-}
-
-type SalesReportResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *SalesReportResponse) Reset() {
-	*x = SalesReportResponse{}
-	mi := &file_admin_messages_proto_msgTypes[17]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *SalesReportResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*SalesReportResponse) ProtoMessage() {}
-
-func (x *SalesReportResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_admin_messages_proto_msgTypes[17]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use SalesReportResponse.ProtoReflect.Descriptor instead.
-func (*SalesReportResponse) Descriptor() ([]byte, []int) {
-	return file_admin_messages_proto_rawDescGZIP(), []int{17}
+	return false
 }
 
 var File_admin_messages_proto protoreflect.FileDescriptor
@@ -759,32 +335,18 @@ var file_admin_messages_proto_rawDesc = []byte{
 	0x08, 0x70, 0x61, 0x73, 0x73, 0x77, 0x6f, 0x72, 0x64, 0x22, 0x2d, 0x0a, 0x13, 0x41, 0x64, 0x6d,
 	0x69, 0x6e, 0x43, 0x72, 0x65, 0x61, 0x74, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
 	0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
-	0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x10, 0x0a, 0x0e, 0x4e, 0x65, 0x77, 0x42,
-	0x6f, 0x6f, 0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x11, 0x0a, 0x0f, 0x4e, 0x65,
-	0x77, 0x42, 0x6f, 0x6f, 0x6b, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x13, 0x0a,
-	0x11, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x42, 0x6f, 0x6f, 0x6b, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x22, 0x14, 0x0a, 0x12, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x42, 0x6f, 0x6f, 0x6b,
-	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x23, 0x0a, 0x11, 0x44, 0x65, 0x6c, 0x65,
-	0x74, 0x65, 0x42, 0x6f, 0x6f, 0x6b, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a,
-	0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x14, 0x0a,
-	0x12, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x42, 0x6f, 0x6f, 0x6b, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x22, 0x14, 0x0a, 0x12, 0x4e, 0x65, 0x77, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f,
-	0x72, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x15, 0x0a, 0x13, 0x4e, 0x65, 0x77,
-	0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
-	0x22, 0x17, 0x0a, 0x15, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f,
-	0x72, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x18, 0x0a, 0x16, 0x55, 0x70, 0x64,
-	0x61, 0x74, 0x65, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x22, 0x27, 0x0a, 0x15, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x43, 0x61, 0x74,
-	0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02,
-	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x18, 0x0a, 0x16,
-	0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x14, 0x0a, 0x12, 0x53, 0x61, 0x6c, 0x65, 0x73, 0x52,
-	0x65, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x15, 0x0a, 0x13,
-	0x53, 0x61, 0x6c, 0x65, 0x73, 0x52, 0x65, 0x70, 0x6f, 0x72, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x42, 0x2c, 0x5a, 0x2a, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f,
-	0x6d, 0x2f, 0x53, 0x75, 0x72, 0x79, 0x61, 0x2d, 0x37, 0x38, 0x39, 0x30, 0x2f, 0x62, 0x6f, 0x6f,
-	0x6b, 0x5f, 0x73, 0x74, 0x6f, 0x72, 0x65, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x65,
-	0x6e, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
+	0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x22, 0x30, 0x0a, 0x12, 0x56, 0x65, 0x72, 0x69,
+	0x66, 0x79, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1a,
+	0x0a, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
+	0x52, 0x08, 0x75, 0x73, 0x65, 0x72, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x45, 0x0a, 0x13, 0x56, 0x65,
+	0x72, 0x69, 0x66, 0x79, 0x41, 0x64, 0x6d, 0x69, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
+	0x65, 0x12, 0x16, 0x0a, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x18, 0x01, 0x20, 0x01, 0x28,
+	0x09, 0x52, 0x06, 0x73, 0x74, 0x61, 0x74, 0x75, 0x73, 0x12, 0x16, 0x0a, 0x06, 0x72, 0x65, 0x73,
+	0x75, 0x6c, 0x74, 0x18, 0x02, 0x20, 0x01, 0x28, 0x08, 0x52, 0x06, 0x72, 0x65, 0x73, 0x75, 0x6c,
+	0x74, 0x42, 0x2c, 0x5a, 0x2a, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f,
+	0x53, 0x75, 0x72, 0x79, 0x61, 0x2d, 0x37, 0x38, 0x39, 0x30, 0x2f, 0x62, 0x6f, 0x6f, 0x6b, 0x5f,
+	0x73, 0x74, 0x6f, 0x72, 0x65, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x65, 0x6e, 0x62,
+	0x06, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x33,
 }
 
 var (
@@ -799,26 +361,14 @@ func file_admin_messages_proto_rawDescGZIP() []byte {
 	return file_admin_messages_proto_rawDescData
 }
 
-var file_admin_messages_proto_msgTypes = make([]protoimpl.MessageInfo, 18)
+var file_admin_messages_proto_msgTypes = make([]protoimpl.MessageInfo, 6)
 var file_admin_messages_proto_goTypes = []any{
-	(*AdminLoginRequest)(nil),      // 0: book_store.admin_service.AdminLoginRequest
-	(*AdminLoginResponse)(nil),     // 1: book_store.admin_service.AdminLoginResponse
-	(*AdminCreateRequest)(nil),     // 2: book_store.admin_service.AdminCreateRequest
-	(*AdminCreateResponse)(nil),    // 3: book_store.admin_service.AdminCreateResponse
-	(*NewBookRequest)(nil),         // 4: book_store.admin_service.NewBookRequest
-	(*NewBookResponse)(nil),        // 5: book_store.admin_service.NewBookResponse
-	(*UpdateBookRequest)(nil),      // 6: book_store.admin_service.UpdateBookRequest
-	(*UpdateBookResponse)(nil),     // 7: book_store.admin_service.UpdateBookResponse
-	(*DeleteBookRequest)(nil),      // 8: book_store.admin_service.DeleteBookRequest
-	(*DeleteBookResponse)(nil),     // 9: book_store.admin_service.DeleteBookResponse
-	(*NewCategoryRequest)(nil),     // 10: book_store.admin_service.NewCategoryRequest
-	(*NewCategoryResponse)(nil),    // 11: book_store.admin_service.NewCategoryResponse
-	(*UpdateCategoryRequest)(nil),  // 12: book_store.admin_service.UpdateCategoryRequest
-	(*UpdateCategoryResponse)(nil), // 13: book_store.admin_service.UpdateCategoryResponse
-	(*DeleteCategoryRequest)(nil),  // 14: book_store.admin_service.DeleteCategoryRequest
-	(*DeleteCategoryResponse)(nil), // 15: book_store.admin_service.DeleteCategoryResponse
-	(*SalesReportRequest)(nil),     // 16: book_store.admin_service.SalesReportRequest
-	(*SalesReportResponse)(nil),    // 17: book_store.admin_service.SalesReportResponse
+	(*AdminLoginRequest)(nil),   // 0: book_store.admin_service.AdminLoginRequest
+	(*AdminLoginResponse)(nil),  // 1: book_store.admin_service.AdminLoginResponse
+	(*AdminCreateRequest)(nil),  // 2: book_store.admin_service.AdminCreateRequest
+	(*AdminCreateResponse)(nil), // 3: book_store.admin_service.AdminCreateResponse
+	(*VerifyAdminRequest)(nil),  // 4: book_store.admin_service.VerifyAdminRequest
+	(*VerifyAdminResponse)(nil), // 5: book_store.admin_service.VerifyAdminResponse
 }
 var file_admin_messages_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -839,7 +389,7 @@ func file_admin_messages_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_admin_messages_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   18,
+			NumMessages:   6,
 			NumExtensions: 0,
 			NumServices:   0,
 		},

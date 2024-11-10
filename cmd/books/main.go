@@ -12,7 +12,7 @@ import (
 
 func main() {
 	config.LoadConfig()
-	
+
 	port := viper.GetString("port")
 	listener, err := net.Listen("tcp", port)
 	if err != nil {
@@ -21,6 +21,7 @@ func main() {
 
 	server := grpc.NewServer()
 	gen.RegisterBooksServer(server, &routes.BooksService{})
+	gen.RegisterModifyBooksServer(server, &routes.ModifyBooksService{})
 
 	err = server.Serve(listener)
 	if err != nil {

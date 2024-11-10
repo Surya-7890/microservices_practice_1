@@ -21,9 +21,6 @@ func main() {
 
 	server := grpc.NewServer()
 	gen.RegisterAdminAuthServer(server, &routes.AdminAuthService{})
-	gen.RegisterAdminBooksServer(server, &routes.AdminBooksService{})
-	gen.RegisterBookCategoriesServer(server, &routes.BookCategoryService{})
-	gen.RegisterSalesReportServer(server, &routes.SalesReportService{})
 
 	reflection.Register(server)
 

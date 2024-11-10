@@ -19,23 +19,11 @@ message AdminCreateResponse {
     string status = 1;
 }
 
-message NewBookRequest {}
-message NewBookResponse {}
-message UpdateBookRequest {}
-message UpdateBookResponse {}
-message DeleteBookRequest {
-    string id = 1;
+message VerifyAdminRequest {
+    string username = 1;
 }
-message DeleteBookResponse {}
 
-message NewCategoryRequest {}
-message NewCategoryResponse {}
-message UpdateCategoryRequest {}
-message UpdateCategoryResponse {}
-message DeleteCategoryRequest {
-    string id = 1;
+message VerifyAdminResponse {
+    string status = 1;
+    bool result = 2;
 }
-message DeleteCategoryResponse {}
-
-message SalesReportRequest {}
-message SalesReportResponse {}
