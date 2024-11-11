@@ -26,3 +26,48 @@ service Books {
         };
     } 
 }
+
+service ModifyBooks {
+    rpc NewBook(NewBookRequest) returns (NewBookResponse) {
+        option(google.api.http) = {
+            post: "/v1/books";
+            body: "*";
+        };
+    }
+
+    rpc UpdateBooks(UpdateBookRequest) returns (UpdateBookResponse) {
+        option(google.api.http) = {
+            patch: "/v1/books";
+            body: "*";
+        };
+    }
+
+    rpc DeleteBooks(DeleteBookRequest) returns (DeleteBookResponse) {
+        option(google.api.http) = {
+            delete: "/v1/books/{id}";
+        };
+    }
+}
+
+service ModifyCategories {
+    rpc CreateCategory(NewCategoryRequest) returns (NewCategoryResponse) {
+        option(google.api.http) = {
+            post: "/v1/books/categories";
+            body: "*";
+        };
+    }
+
+    rpc UpdateCategory(UpdateCategoryRequest) returns (UpdateCategoryResponse) {
+        option(google.api.http) = {
+            patch: "/v1/books/categories";
+            body: "*";
+        };
+    }
+
+    rpc DeleteCategory(DeleteCategoryRequest) returns (DeleteCategoryResponse) {
+        option(google.api.http) = {
+            delete: "/v1/books/categories/{id}";
+        };
+    }
+}
+

@@ -193,3 +193,355 @@ var Books_ServiceDesc = grpc.ServiceDesc{
 	Streams:  []grpc.StreamDesc{},
 	Metadata: "books.proto",
 }
+
+const (
+	ModifyBooks_NewBook_FullMethodName     = "/book_store.books_service.ModifyBooks/NewBook"
+	ModifyBooks_UpdateBooks_FullMethodName = "/book_store.books_service.ModifyBooks/UpdateBooks"
+	ModifyBooks_DeleteBooks_FullMethodName = "/book_store.books_service.ModifyBooks/DeleteBooks"
+)
+
+// ModifyBooksClient is the client API for ModifyBooks service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type ModifyBooksClient interface {
+	NewBook(ctx context.Context, in *NewBookRequest, opts ...grpc.CallOption) (*NewBookResponse, error)
+	UpdateBooks(ctx context.Context, in *UpdateBookRequest, opts ...grpc.CallOption) (*UpdateBookResponse, error)
+	DeleteBooks(ctx context.Context, in *DeleteBookRequest, opts ...grpc.CallOption) (*DeleteBookResponse, error)
+}
+
+type modifyBooksClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewModifyBooksClient(cc grpc.ClientConnInterface) ModifyBooksClient {
+	return &modifyBooksClient{cc}
+}
+
+func (c *modifyBooksClient) NewBook(ctx context.Context, in *NewBookRequest, opts ...grpc.CallOption) (*NewBookResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(NewBookResponse)
+	err := c.cc.Invoke(ctx, ModifyBooks_NewBook_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *modifyBooksClient) UpdateBooks(ctx context.Context, in *UpdateBookRequest, opts ...grpc.CallOption) (*UpdateBookResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateBookResponse)
+	err := c.cc.Invoke(ctx, ModifyBooks_UpdateBooks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *modifyBooksClient) DeleteBooks(ctx context.Context, in *DeleteBookRequest, opts ...grpc.CallOption) (*DeleteBookResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteBookResponse)
+	err := c.cc.Invoke(ctx, ModifyBooks_DeleteBooks_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ModifyBooksServer is the server API for ModifyBooks service.
+// All implementations should embed UnimplementedModifyBooksServer
+// for forward compatibility.
+type ModifyBooksServer interface {
+	NewBook(context.Context, *NewBookRequest) (*NewBookResponse, error)
+	UpdateBooks(context.Context, *UpdateBookRequest) (*UpdateBookResponse, error)
+	DeleteBooks(context.Context, *DeleteBookRequest) (*DeleteBookResponse, error)
+}
+
+// UnimplementedModifyBooksServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedModifyBooksServer struct{}
+
+func (UnimplementedModifyBooksServer) NewBook(context.Context, *NewBookRequest) (*NewBookResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method NewBook not implemented")
+}
+func (UnimplementedModifyBooksServer) UpdateBooks(context.Context, *UpdateBookRequest) (*UpdateBookResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateBooks not implemented")
+}
+func (UnimplementedModifyBooksServer) DeleteBooks(context.Context, *DeleteBookRequest) (*DeleteBookResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteBooks not implemented")
+}
+func (UnimplementedModifyBooksServer) testEmbeddedByValue() {}
+
+// UnsafeModifyBooksServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ModifyBooksServer will
+// result in compilation errors.
+type UnsafeModifyBooksServer interface {
+	mustEmbedUnimplementedModifyBooksServer()
+}
+
+func RegisterModifyBooksServer(s grpc.ServiceRegistrar, srv ModifyBooksServer) {
+	// If the following call pancis, it indicates UnimplementedModifyBooksServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&ModifyBooks_ServiceDesc, srv)
+}
+
+func _ModifyBooks_NewBook_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NewBookRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ModifyBooksServer).NewBook(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ModifyBooks_NewBook_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ModifyBooksServer).NewBook(ctx, req.(*NewBookRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ModifyBooks_UpdateBooks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateBookRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ModifyBooksServer).UpdateBooks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ModifyBooks_UpdateBooks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ModifyBooksServer).UpdateBooks(ctx, req.(*UpdateBookRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ModifyBooks_DeleteBooks_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteBookRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ModifyBooksServer).DeleteBooks(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ModifyBooks_DeleteBooks_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ModifyBooksServer).DeleteBooks(ctx, req.(*DeleteBookRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// ModifyBooks_ServiceDesc is the grpc.ServiceDesc for ModifyBooks service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var ModifyBooks_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "book_store.books_service.ModifyBooks",
+	HandlerType: (*ModifyBooksServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "NewBook",
+			Handler:    _ModifyBooks_NewBook_Handler,
+		},
+		{
+			MethodName: "UpdateBooks",
+			Handler:    _ModifyBooks_UpdateBooks_Handler,
+		},
+		{
+			MethodName: "DeleteBooks",
+			Handler:    _ModifyBooks_DeleteBooks_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "books.proto",
+}
+
+const (
+	ModifyCategories_CreateCategory_FullMethodName = "/book_store.books_service.ModifyCategories/CreateCategory"
+	ModifyCategories_UpdateCategory_FullMethodName = "/book_store.books_service.ModifyCategories/UpdateCategory"
+	ModifyCategories_DeleteCategory_FullMethodName = "/book_store.books_service.ModifyCategories/DeleteCategory"
+)
+
+// ModifyCategoriesClient is the client API for ModifyCategories service.
+//
+// For semantics around ctx use and closing/ending streaming RPCs, please refer to https://pkg.go.dev/google.golang.org/grpc/?tab=doc#ClientConn.NewStream.
+type ModifyCategoriesClient interface {
+	CreateCategory(ctx context.Context, in *NewCategoryRequest, opts ...grpc.CallOption) (*NewCategoryResponse, error)
+	UpdateCategory(ctx context.Context, in *UpdateCategoryRequest, opts ...grpc.CallOption) (*UpdateCategoryResponse, error)
+	DeleteCategory(ctx context.Context, in *DeleteCategoryRequest, opts ...grpc.CallOption) (*DeleteCategoryResponse, error)
+}
+
+type modifyCategoriesClient struct {
+	cc grpc.ClientConnInterface
+}
+
+func NewModifyCategoriesClient(cc grpc.ClientConnInterface) ModifyCategoriesClient {
+	return &modifyCategoriesClient{cc}
+}
+
+func (c *modifyCategoriesClient) CreateCategory(ctx context.Context, in *NewCategoryRequest, opts ...grpc.CallOption) (*NewCategoryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(NewCategoryResponse)
+	err := c.cc.Invoke(ctx, ModifyCategories_CreateCategory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *modifyCategoriesClient) UpdateCategory(ctx context.Context, in *UpdateCategoryRequest, opts ...grpc.CallOption) (*UpdateCategoryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(UpdateCategoryResponse)
+	err := c.cc.Invoke(ctx, ModifyCategories_UpdateCategory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *modifyCategoriesClient) DeleteCategory(ctx context.Context, in *DeleteCategoryRequest, opts ...grpc.CallOption) (*DeleteCategoryResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(DeleteCategoryResponse)
+	err := c.cc.Invoke(ctx, ModifyCategories_DeleteCategory_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+// ModifyCategoriesServer is the server API for ModifyCategories service.
+// All implementations should embed UnimplementedModifyCategoriesServer
+// for forward compatibility.
+type ModifyCategoriesServer interface {
+	CreateCategory(context.Context, *NewCategoryRequest) (*NewCategoryResponse, error)
+	UpdateCategory(context.Context, *UpdateCategoryRequest) (*UpdateCategoryResponse, error)
+	DeleteCategory(context.Context, *DeleteCategoryRequest) (*DeleteCategoryResponse, error)
+}
+
+// UnimplementedModifyCategoriesServer should be embedded to have
+// forward compatible implementations.
+//
+// NOTE: this should be embedded by value instead of pointer to avoid a nil
+// pointer dereference when methods are called.
+type UnimplementedModifyCategoriesServer struct{}
+
+func (UnimplementedModifyCategoriesServer) CreateCategory(context.Context, *NewCategoryRequest) (*NewCategoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method CreateCategory not implemented")
+}
+func (UnimplementedModifyCategoriesServer) UpdateCategory(context.Context, *UpdateCategoryRequest) (*UpdateCategoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCategory not implemented")
+}
+func (UnimplementedModifyCategoriesServer) DeleteCategory(context.Context, *DeleteCategoryRequest) (*DeleteCategoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteCategory not implemented")
+}
+func (UnimplementedModifyCategoriesServer) testEmbeddedByValue() {}
+
+// UnsafeModifyCategoriesServer may be embedded to opt out of forward compatibility for this service.
+// Use of this interface is not recommended, as added methods to ModifyCategoriesServer will
+// result in compilation errors.
+type UnsafeModifyCategoriesServer interface {
+	mustEmbedUnimplementedModifyCategoriesServer()
+}
+
+func RegisterModifyCategoriesServer(s grpc.ServiceRegistrar, srv ModifyCategoriesServer) {
+	// If the following call pancis, it indicates UnimplementedModifyCategoriesServer was
+	// embedded by pointer and is nil.  This will cause panics if an
+	// unimplemented method is ever invoked, so we test this at initialization
+	// time to prevent it from happening at runtime later due to I/O.
+	if t, ok := srv.(interface{ testEmbeddedByValue() }); ok {
+		t.testEmbeddedByValue()
+	}
+	s.RegisterService(&ModifyCategories_ServiceDesc, srv)
+}
+
+func _ModifyCategories_CreateCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(NewCategoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ModifyCategoriesServer).CreateCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ModifyCategories_CreateCategory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ModifyCategoriesServer).CreateCategory(ctx, req.(*NewCategoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ModifyCategories_UpdateCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateCategoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ModifyCategoriesServer).UpdateCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ModifyCategories_UpdateCategory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ModifyCategoriesServer).UpdateCategory(ctx, req.(*UpdateCategoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _ModifyCategories_DeleteCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteCategoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(ModifyCategoriesServer).DeleteCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: ModifyCategories_DeleteCategory_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(ModifyCategoriesServer).DeleteCategory(ctx, req.(*DeleteCategoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+// ModifyCategories_ServiceDesc is the grpc.ServiceDesc for ModifyCategories service.
+// It's only intended for direct use with grpc.RegisterService,
+// and not to be introspected or modified (even as a copy)
+var ModifyCategories_ServiceDesc = grpc.ServiceDesc{
+	ServiceName: "book_store.books_service.ModifyCategories",
+	HandlerType: (*ModifyCategoriesServer)(nil),
+	Methods: []grpc.MethodDesc{
+		{
+			MethodName: "CreateCategory",
+			Handler:    _ModifyCategories_CreateCategory_Handler,
+		},
+		{
+			MethodName: "UpdateCategory",
+			Handler:    _ModifyCategories_UpdateCategory_Handler,
+		},
+		{
+			MethodName: "DeleteCategory",
+			Handler:    _ModifyCategories_DeleteCategory_Handler,
+		},
+	},
+	Streams:  []grpc.StreamDesc{},
+	Metadata: "books.proto",
+}

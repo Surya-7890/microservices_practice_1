@@ -8,11 +8,12 @@ import (
 	"github.com/Surya-7890/book_store/books/routes"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
 	config.LoadConfig()
-	
+
 	port := viper.GetString("port")
 	listener, err := net.Listen("tcp", port)
 	if err != nil {
@@ -21,6 +22,10 @@ func main() {
 
 	server := grpc.NewServer()
 	gen.RegisterBooksServer(server, &routes.BooksService{})
+	gen.RegisterModifyBooksServer(server, &routes.ModifyBooksService{})
+	gen.RegisterModifyCategoriesServer(server, &routes.ModifyCategoriesService{})
+
+	reflection.Register(server)
 
 	err = server.Serve(listener)
 	if err != nil {
