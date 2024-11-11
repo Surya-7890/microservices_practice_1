@@ -8,21 +8,15 @@ import "google/api/annotations.proto";
 option go_package = "github.com/Surya-7890/book_store/proto/gen";
 
 service Books {
-    rpc GetCategories(GetCategoriesRequest) returns (GetCategoriesResponse) {
-        option(google.api.http) = {
-            get: "/v1/categories/{id}";
-        };
-    }
-
     rpc GetBooks(GetBooksRequest) returns (GetBooksResponse) {
         option(google.api.http) = {
-            get: "/v1/categories/{id}/books";
+            get: "/v1/books";
         };
     } 
 
     rpc GetBook(GetBookRequest) returns (GetBookResponse) {
         option(google.api.http) = {
-            get: "/v1/categories/{c_id}/books/{id}";
+            get: "/v1/book/{id}";
         };
     } 
 }
@@ -48,26 +42,3 @@ service ModifyBooks {
         };
     }
 }
-
-service ModifyCategories {
-    rpc CreateCategory(NewCategoryRequest) returns (NewCategoryResponse) {
-        option(google.api.http) = {
-            post: "/v1/books/categories";
-            body: "*";
-        };
-    }
-
-    rpc UpdateCategory(UpdateCategoryRequest) returns (UpdateCategoryResponse) {
-        option(google.api.http) = {
-            patch: "/v1/books/categories";
-            body: "*";
-        };
-    }
-
-    rpc DeleteCategory(DeleteCategoryRequest) returns (DeleteCategoryResponse) {
-        option(google.api.http) = {
-            delete: "/v1/books/categories/{id}";
-        };
-    }
-}
-

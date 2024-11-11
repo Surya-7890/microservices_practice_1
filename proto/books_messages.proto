@@ -4,27 +4,24 @@ package book_store.books_service;
 
 option go_package = "github.com/Surya-7890/book_store/proto/gen";
 
-
-
-message GetCategoriesRequest {
+message Book {
     string id = 1;
+    string name = 2;
+    float price = 3;
+    string author = 4;
 }
-message GetCategoriesResponse {}
-message UpdateCategoriesRequest {}
-message UpdateCategoriesResponse {}
+
 message GetBookRequest {
     string id = 1;
-    string c_id = 2;
 }
-message GetBookResponse {}
-message GetBooksRequest {
-    string id = 1;
+message GetBookResponse {
+    Book book = 1;
 }
-message GetBooksResponse {}
 
-
-
-
+message GetBooksRequest {}
+message GetBooksResponse {
+    repeated Book books = 1;
+}
 
 message NewBookRequest {
     string id = 1;
@@ -52,15 +49,3 @@ message DeleteBookRequest {
 message DeleteBookResponse {
     string status = 1;
 }
-
-
-
-
-message NewCategoryRequest {}
-message NewCategoryResponse {}
-message UpdateCategoryRequest {}
-message UpdateCategoryResponse {}
-message DeleteCategoryRequest {
-    string id = 1;
-}
-message DeleteCategoryResponse {}
