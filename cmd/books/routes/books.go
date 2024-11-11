@@ -5,10 +5,12 @@ import (
 	"fmt"
 
 	"github.com/Surya-7890/book_store/books/gen"
+	"gorm.io/gorm"
 )
 
 type BooksService struct {
 	gen.UnimplementedBooksServer
+	DB *gorm.DB
 }
 
 /* GET: /v1/categories/{id}/books */

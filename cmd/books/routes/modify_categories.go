@@ -4,10 +4,12 @@ import (
 	"context"
 
 	"github.com/Surya-7890/book_store/books/gen"
+	"gorm.io/gorm"
 )
 
 type ModifyCategoriesService struct {
 	gen.UnimplementedModifyCategoriesServer
+	DB *gorm.DB
 }
 
 func (m *ModifyCategoriesService) CreateCategory(context.Context, *gen.NewCategoryRequest) (*gen.NewCategoryResponse, error) {
