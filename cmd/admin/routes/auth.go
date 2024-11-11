@@ -2,6 +2,7 @@ package routes
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/Surya-7890/book_store/admin/db"
 	"github.com/Surya-7890/book_store/admin/gen"
@@ -34,6 +35,7 @@ func (a *AdminAuthService) AdminLogin(ctx context.Context, req *gen.AdminLoginRe
 /* POST: /v1/admin/create */
 func (a *AdminAuthService) AdminCreate(ctx context.Context, req *gen.AdminCreateRequest) (*gen.AdminCreateResponse, error) {
 	res := &gen.AdminCreateResponse{}
+	fmt.Println("working", req)
 	admin := db.Admin{
 		Username: req.GetUsername(),
 		Password: req.GetPassword(),
@@ -42,7 +44,7 @@ func (a *AdminAuthService) AdminCreate(ctx context.Context, req *gen.AdminCreate
 		res.Status = RESPONSE_FAILURE
 		return res, status.Error(codes.AlreadyExists, "Admin With The Username Already Exists")
 	}
-	tx := a.DB.Create(admin)
+	tx := a.DB.Create(&admin)
 
 	// handle errors while creating
 	if tx.Error != nil {
