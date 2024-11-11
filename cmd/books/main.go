@@ -26,7 +26,6 @@ func main() {
 	server := grpc.NewServer()
 	gen.RegisterBooksServer(server, &routes.BooksService{DB: DB})
 	gen.RegisterModifyBooksServer(server, &routes.ModifyBooksService{DB: DB})
-	gen.RegisterModifyCategoriesServer(server, &routes.ModifyCategoriesService{DB: DB})
 
 	reflection.Register(server)
 

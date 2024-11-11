@@ -26,6 +26,7 @@ func getPostgresConnectionString() (string, error) {
 	if err := viper.Unmarshal(cfg); err != nil {
 		return "", nil
 	}
+	fmt.Println(cfg)
 	return fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=%s",
 		cfg.DB.Host,
 		cfg.DB.Port,
@@ -43,6 +44,9 @@ func ConnectToPostgres() *gorm.DB {
 	}
 	db, err := gorm.Open(postgres.Open(postgres_uri))
 	if err != nil {
+		panic(err)
+	}
+	if err := db.AutoMigrate(&Book{}); err != nil {
 		panic(err)
 	}
 	return db

@@ -34,11 +34,6 @@ func setupBooksEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts [
 	if err != nil {
 		panic(err)
 	}
-
-	err = gen.RegisterModifyCategoriesHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{books_host, books_port}, ":"), dialOpts)
-	if err != nil {
-		panic(err)
-	}
 }
 
 func setupUserEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption) {
