@@ -4,6 +4,7 @@ import (
 	"net"
 
 	"github.com/Surya-7890/book_store/user/config"
+	"github.com/Surya-7890/book_store/user/db"
 	"github.com/Surya-7890/book_store/user/gen"
 	"github.com/Surya-7890/book_store/user/routes"
 	"github.com/spf13/viper"
@@ -19,9 +20,11 @@ func main() {
 		panic(err)
 	}
 
+	DB := db.ConnectToPostgres()
+
 	server := grpc.NewServer()
-	gen.RegisterUserAuthServer(server, &routes.UserService{})
-	gen.RegisterUserProfileServer(server, &routes.UserProfileService{})
+	gen.RegisterUserAuthServer(server, &routes.UserService{DB: DB})
+	gen.RegisterUserProfileServer(server, &routes.UserProfileService{DB: DB})
 
 	reflection.Register(server)
 

@@ -5,10 +5,12 @@ import (
 	"fmt"
 
 	"github.com/Surya-7890/book_store/user/gen"
+	"gorm.io/gorm"
 )
 
 type UserProfileService struct {
 	gen.UnimplementedUserProfileServer
+	DB *gorm.DB
 }
 
 /* GET: /v1/user/profile */

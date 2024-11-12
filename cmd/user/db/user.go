@@ -10,7 +10,7 @@ import (
 type User struct {
 	*gorm.Model
 	Name     string `json:"name"`
-	Age      int    `json:"age"`
+	Age      int32  `json:"age"`
 	Username string `json:"username"`
 	Password string `json:"password"`
 }
@@ -28,8 +28,8 @@ func (u *User) BeforeSave(db *gorm.DB) error {
 	return nil
 }
 
-func (u *User) IsCorrectPassword(hashedPassword string) bool {
-	return bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(u.Password)) == nil
+func (u *User) IsCorrectPassword(password string) bool {
+	return bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password)) == nil
 }
 
 func (u *User) AlreadyExists(db *gorm.DB) bool {
