@@ -7,6 +7,10 @@ import (
 	"github.com/Surya-7890/book_store/user/gen"
 )
 
+type UserProfileService struct {
+	gen.UnimplementedUserProfileServer
+}
+
 /* GET: /v1/user/profile */
 func (u *UserService) GetUser(ctx context.Context, req *gen.GetUserRequest) (*gen.GetUserResponse, error) {
 	res := &gen.GetUserResponse{}

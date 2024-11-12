@@ -9,8 +9,6 @@ import (
 
 type UserService struct {
 	gen.UnimplementedUserAuthServer
-	gen.UnimplementedUserCommentsServer
-	gen.UnimplementedUserProfileServer
 }
 
 /* POST: /v1/user/login */

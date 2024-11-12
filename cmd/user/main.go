@@ -8,6 +8,7 @@ import (
 	"github.com/Surya-7890/book_store/user/routes"
 	"github.com/spf13/viper"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/reflection"
 )
 
 func main() {
@@ -20,8 +21,9 @@ func main() {
 
 	server := grpc.NewServer()
 	gen.RegisterUserAuthServer(server, &routes.UserService{})
-	gen.RegisterUserCommentsServer(server, &routes.UserService{})
-	gen.RegisterUserProfileServer(server, &routes.UserService{})
+	gen.RegisterUserProfileServer(server, &routes.UserProfileService{})
+
+	reflection.Register(server)
 
 	err = server.Serve(listener)
 	if err != nil {

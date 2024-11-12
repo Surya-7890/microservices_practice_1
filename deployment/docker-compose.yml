@@ -81,7 +81,7 @@ services:
     environment:
       POSTGRES_USER: surya
       POSTGRES_PASSWORD: 123
-      POSTGRES_DB: book_store_gateway
+      POSTGRES_DB: book_store_users
     volumes:
       - user_postgres:/var/lib/postgresql/data
 

@@ -380,249 +380,6 @@ func (*DeleteUserResponse) Descriptor() ([]byte, []int) {
 	return file_user_messages_proto_rawDescGZIP(), []int{9}
 }
 
-type PostCommentRequest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-}
-
-func (x *PostCommentRequest) Reset() {
-	*x = PostCommentRequest{}
-	mi := &file_user_messages_proto_msgTypes[10]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PostCommentRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PostCommentRequest) ProtoMessage() {}
-
-func (x *PostCommentRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_messages_proto_msgTypes[10]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PostCommentRequest.ProtoReflect.Descriptor instead.
-func (*PostCommentRequest) Descriptor() ([]byte, []int) {
-	return file_user_messages_proto_rawDescGZIP(), []int{10}
-}
-
-func (x *PostCommentRequest) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-type PostCommentResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *PostCommentResponse) Reset() {
-	*x = PostCommentResponse{}
-	mi := &file_user_messages_proto_msgTypes[11]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *PostCommentResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*PostCommentResponse) ProtoMessage() {}
-
-func (x *PostCommentResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_messages_proto_msgTypes[11]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use PostCommentResponse.ProtoReflect.Descriptor instead.
-func (*PostCommentResponse) Descriptor() ([]byte, []int) {
-	return file_user_messages_proto_rawDescGZIP(), []int{11}
-}
-
-type UpdateCommentRequest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-}
-
-func (x *UpdateCommentRequest) Reset() {
-	*x = UpdateCommentRequest{}
-	mi := &file_user_messages_proto_msgTypes[12]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateCommentRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateCommentRequest) ProtoMessage() {}
-
-func (x *UpdateCommentRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_messages_proto_msgTypes[12]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateCommentRequest.ProtoReflect.Descriptor instead.
-func (*UpdateCommentRequest) Descriptor() ([]byte, []int) {
-	return file_user_messages_proto_rawDescGZIP(), []int{12}
-}
-
-func (x *UpdateCommentRequest) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-type UpdateCommentResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *UpdateCommentResponse) Reset() {
-	*x = UpdateCommentResponse{}
-	mi := &file_user_messages_proto_msgTypes[13]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *UpdateCommentResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*UpdateCommentResponse) ProtoMessage() {}
-
-func (x *UpdateCommentResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_messages_proto_msgTypes[13]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use UpdateCommentResponse.ProtoReflect.Descriptor instead.
-func (*UpdateCommentResponse) Descriptor() ([]byte, []int) {
-	return file_user_messages_proto_rawDescGZIP(), []int{13}
-}
-
-type DeleteCommentRequest struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-
-	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-}
-
-func (x *DeleteCommentRequest) Reset() {
-	*x = DeleteCommentRequest{}
-	mi := &file_user_messages_proto_msgTypes[14]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteCommentRequest) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteCommentRequest) ProtoMessage() {}
-
-func (x *DeleteCommentRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_user_messages_proto_msgTypes[14]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteCommentRequest.ProtoReflect.Descriptor instead.
-func (*DeleteCommentRequest) Descriptor() ([]byte, []int) {
-	return file_user_messages_proto_rawDescGZIP(), []int{14}
-}
-
-func (x *DeleteCommentRequest) GetId() string {
-	if x != nil {
-		return x.Id
-	}
-	return ""
-}
-
-type DeleteCommentResponse struct {
-	state         protoimpl.MessageState
-	sizeCache     protoimpl.SizeCache
-	unknownFields protoimpl.UnknownFields
-}
-
-func (x *DeleteCommentResponse) Reset() {
-	*x = DeleteCommentResponse{}
-	mi := &file_user_messages_proto_msgTypes[15]
-	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-	ms.StoreMessageInfo(mi)
-}
-
-func (x *DeleteCommentResponse) String() string {
-	return protoimpl.X.MessageStringOf(x)
-}
-
-func (*DeleteCommentResponse) ProtoMessage() {}
-
-func (x *DeleteCommentResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_user_messages_proto_msgTypes[15]
-	if x != nil {
-		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
-		if ms.LoadMessageInfo() == nil {
-			ms.StoreMessageInfo(mi)
-		}
-		return ms
-	}
-	return mi.MessageOf(x)
-}
-
-// Deprecated: Use DeleteCommentResponse.ProtoReflect.Descriptor instead.
-func (*DeleteCommentResponse) Descriptor() ([]byte, []int) {
-	return file_user_messages_proto_rawDescGZIP(), []int{15}
-}
-
 var File_user_messages_proto protoreflect.FileDescriptor
 
 var file_user_messages_proto_rawDesc = []byte{
@@ -641,23 +398,11 @@ var file_user_messages_proto_rawDesc = []byte{
 	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x55, 0x73, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
 	0x73, 0x65, 0x22, 0x13, 0x0a, 0x11, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x55, 0x73, 0x65, 0x72,
 	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x14, 0x0a, 0x12, 0x44, 0x65, 0x6c, 0x65, 0x74,
-	0x65, 0x55, 0x73, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x24, 0x0a,
-	0x12, 0x50, 0x6f, 0x73, 0x74, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75,
-	0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x02, 0x69, 0x64, 0x22, 0x15, 0x0a, 0x13, 0x50, 0x6f, 0x73, 0x74, 0x43, 0x6f, 0x6d, 0x6d, 0x65,
-	0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x26, 0x0a, 0x14, 0x55, 0x70,
-	0x64, 0x61, 0x74, 0x65, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65,
-	0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02,
-	0x69, 0x64, 0x22, 0x17, 0x0a, 0x15, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x6f, 0x6d, 0x6d,
-	0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x26, 0x0a, 0x14, 0x44,
-	0x65, 0x6c, 0x65, 0x74, 0x65, 0x43, 0x6f, 0x6d, 0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x71, 0x75,
-	0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
-	0x02, 0x69, 0x64, 0x22, 0x17, 0x0a, 0x15, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x43, 0x6f, 0x6d,
-	0x6d, 0x65, 0x6e, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x2c, 0x5a, 0x2a,
-	0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x53, 0x75, 0x72, 0x79, 0x61,
-	0x2d, 0x37, 0x38, 0x39, 0x30, 0x2f, 0x62, 0x6f, 0x6f, 0x6b, 0x5f, 0x73, 0x74, 0x6f, 0x72, 0x65,
-	0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x65, 0x6e, 0x62, 0x06, 0x70, 0x72, 0x6f, 0x74,
-	0x6f, 0x33,
+	0x65, 0x55, 0x73, 0x65, 0x72, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x42, 0x2c, 0x5a,
+	0x2a, 0x67, 0x69, 0x74, 0x68, 0x75, 0x62, 0x2e, 0x63, 0x6f, 0x6d, 0x2f, 0x53, 0x75, 0x72, 0x79,
+	0x61, 0x2d, 0x37, 0x38, 0x39, 0x30, 0x2f, 0x62, 0x6f, 0x6f, 0x6b, 0x5f, 0x73, 0x74, 0x6f, 0x72,
+	0x65, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x2f, 0x67, 0x65, 0x6e, 0x62, 0x06, 0x70, 0x72, 0x6f,
+	0x74, 0x6f, 0x33,
 }
 
 var (
@@ -672,24 +417,18 @@ func file_user_messages_proto_rawDescGZIP() []byte {
 	return file_user_messages_proto_rawDescData
 }
 
-var file_user_messages_proto_msgTypes = make([]protoimpl.MessageInfo, 16)
+var file_user_messages_proto_msgTypes = make([]protoimpl.MessageInfo, 10)
 var file_user_messages_proto_goTypes = []any{
-	(*UserLoginRequest)(nil),      // 0: book_store.user_service.UserLoginRequest
-	(*UserLoginResponse)(nil),     // 1: book_store.user_service.UserLoginResponse
-	(*UserSignupRequest)(nil),     // 2: book_store.user_service.UserSignupRequest
-	(*UserSignupResponse)(nil),    // 3: book_store.user_service.UserSignupResponse
-	(*GetUserRequest)(nil),        // 4: book_store.user_service.GetUserRequest
-	(*GetUserResponse)(nil),       // 5: book_store.user_service.GetUserResponse
-	(*UpdateUserRequest)(nil),     // 6: book_store.user_service.UpdateUserRequest
-	(*UpdateUserResponse)(nil),    // 7: book_store.user_service.UpdateUserResponse
-	(*DeleteUserRequest)(nil),     // 8: book_store.user_service.DeleteUserRequest
-	(*DeleteUserResponse)(nil),    // 9: book_store.user_service.DeleteUserResponse
-	(*PostCommentRequest)(nil),    // 10: book_store.user_service.PostCommentRequest
-	(*PostCommentResponse)(nil),   // 11: book_store.user_service.PostCommentResponse
-	(*UpdateCommentRequest)(nil),  // 12: book_store.user_service.UpdateCommentRequest
-	(*UpdateCommentResponse)(nil), // 13: book_store.user_service.UpdateCommentResponse
-	(*DeleteCommentRequest)(nil),  // 14: book_store.user_service.DeleteCommentRequest
-	(*DeleteCommentResponse)(nil), // 15: book_store.user_service.DeleteCommentResponse
+	(*UserLoginRequest)(nil),   // 0: book_store.user_service.UserLoginRequest
+	(*UserLoginResponse)(nil),  // 1: book_store.user_service.UserLoginResponse
+	(*UserSignupRequest)(nil),  // 2: book_store.user_service.UserSignupRequest
+	(*UserSignupResponse)(nil), // 3: book_store.user_service.UserSignupResponse
+	(*GetUserRequest)(nil),     // 4: book_store.user_service.GetUserRequest
+	(*GetUserResponse)(nil),    // 5: book_store.user_service.GetUserResponse
+	(*UpdateUserRequest)(nil),  // 6: book_store.user_service.UpdateUserRequest
+	(*UpdateUserResponse)(nil), // 7: book_store.user_service.UpdateUserResponse
+	(*DeleteUserRequest)(nil),  // 8: book_store.user_service.DeleteUserRequest
+	(*DeleteUserResponse)(nil), // 9: book_store.user_service.DeleteUserResponse
 }
 var file_user_messages_proto_depIdxs = []int32{
 	0, // [0:0] is the sub-list for method output_type
@@ -710,7 +449,7 @@ func file_user_messages_proto_init() {
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: file_user_messages_proto_rawDesc,
 			NumEnums:      0,
-			NumMessages:   16,
+			NumMessages:   10,
 			NumExtensions: 0,
 			NumServices:   0,
 		},
