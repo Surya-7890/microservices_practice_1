@@ -4,6 +4,13 @@ package book_store.user_service;
 
 option go_package = "github.com/Surya-7890/book_store/proto/gen";
 
+message User {
+    int32 id = 1;
+    string username = 2;
+    string name = 3;
+    int32 age = 4;
+}
+
 message UserLoginRequest {
     string username = 1;
     string password = 2;
@@ -23,17 +30,25 @@ message UserSignupResponse {
     string token = 2;
 }
 
-message GetUserRequest {}
+message GetUserRequest {
+    string username = 1;
+}
 message GetUserResponse {
     string username = 1;
     string name = 2;
     int32 age = 3;
 }
-message UpdateUserRequest {}
+message UpdateUserRequest {
+    string username = 1;
+    string name = 2;
+    int32 age = 3;
+}
 message UpdateUserResponse {
     string status = 1;
 }
-message DeleteUserRequest {}
+message DeleteUserRequest {
+    string username = 1;
+}
 message DeleteUserResponse {
     string status = 1;
 }

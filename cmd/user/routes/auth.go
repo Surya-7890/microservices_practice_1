@@ -33,6 +33,11 @@ func (u *UserService) UserLogin(ctx context.Context, req *gen.UserLoginRequest) 
 	}
 	res.Status = RESPONSE_SUCCESS
 	res.Token = "token_here"
+
+	ctx = context.WithValue(ctx, "token", "token")
+	ctx = context.WithValue(ctx, "username", user.Username)
+	ctx = context.WithValue(ctx, "user_id", user.ID)
+
 	return res, nil
 }
 
@@ -72,5 +77,10 @@ func (u *UserService) UserSignup(ctx context.Context, req *gen.UserSignupRequest
 
 	res.Status = RESPONSE_SUCCESS
 	res.Token = "token_here"
+
+	ctx = context.WithValue(ctx, "token", "token")
+	ctx = context.WithValue(ctx, "username", user.Username)
+	ctx = context.WithValue(ctx, "user_id", user.ID)
+
 	return res, nil
 }
