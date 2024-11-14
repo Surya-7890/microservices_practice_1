@@ -2,7 +2,6 @@ package routes
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/Surya-7890/book_store/admin/db"
 	"github.com/Surya-7890/book_store/admin/gen"
@@ -35,7 +34,7 @@ func (a *AdminAuthService) AdminLogin(ctx context.Context, req *gen.AdminLoginRe
 /* POST: /v1/admin/create */
 func (a *AdminAuthService) AdminCreate(ctx context.Context, req *gen.AdminCreateRequest) (*gen.AdminCreateResponse, error) {
 	res := &gen.AdminCreateResponse{}
-	fmt.Println("working", req)
+
 	admin := db.Admin{
 		Username: req.GetUsername(),
 		Password: req.GetPassword(),
@@ -58,5 +57,10 @@ func (a *AdminAuthService) AdminCreate(ctx context.Context, req *gen.AdminCreate
 		return res, status.Error(codes.Unknown, "Unable To Create Admin")
 	}
 	res.Status = RESPONSE_SUCCESS
+
+	ctx = context.WithValue(ctx, "token", "token")
+	ctx = context.WithValue(ctx, "username", admin.Username)
+	ctx = context.WithValue(ctx, "user_id", admin.ID)
+
 	return res, nil
 }

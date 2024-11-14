@@ -1,1 +1,8 @@
 port: ":6000"
+postgres:
+  host: user_postgres
+  port: 5432
+  user: surya
+  password: 123
+  dbname: book_store_users
+  sslmode: disable

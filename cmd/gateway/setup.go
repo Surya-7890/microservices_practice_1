@@ -44,10 +44,6 @@ func setupUserEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []
 	if err != nil {
 		panic(err)
 	}
-	err = gen.RegisterUserCommentsHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{user_host, user_port}, ":"), dialOpts)
-	if err != nil {
-		panic(err)
-	}
 	err = gen.RegisterUserProfileHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{user_host, user_port}, ":"), dialOpts)
 	if err != nil {
 		panic(err)
