@@ -18,3 +18,5 @@ kafka:
     error: error-log
     info: info-log
     warning: warning-log
+
+redis: redis:6379

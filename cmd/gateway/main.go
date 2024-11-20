@@ -11,6 +11,7 @@ import (
 	"github.com/Surya-7890/book_store/gateway/redis"
 	gwruntime "github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/segmentio/kafka-go"
+	"github.com/spf13/viper"
 )
 
 var (
@@ -25,8 +26,12 @@ func init() {
 }
 
 func main() {
+	mw := Middleware{
+		Key: viper.GetString("jwt_key"),
+	}
 	gw := gwruntime.NewServeMux([]gwruntime.ServeMuxOption{
-		gwruntime.WithForwardResponseOption(responseInterceptor),
+		gwruntime.WithMetadata(mw.requestInterceptor),
+		gwruntime.WithForwardResponseOption(mw.responseInterceptor),
 	}...)
 	setup(gw)
 

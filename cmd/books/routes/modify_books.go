@@ -2,10 +2,13 @@ package routes
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"github.com/Surya-7890/book_store/books/db"
 	"github.com/Surya-7890/book_store/books/gen"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
 )
@@ -18,6 +21,23 @@ type ModifyBooksService struct {
 // post: /v1/books
 func (m *ModifyBooksService) NewBook(ctx context.Context, req *gen.NewBookRequest) (*gen.NewBookResponse, error) {
 	res := &gen.NewBookResponse{}
+	md, exists := metadata.FromIncomingContext(ctx)
+	if !exists {
+		res.Status = RESPONSE_FAILURE
+		return res, status.Error(codes.InvalidArgument, "invalid header")
+	}
+
+	errors := md.Get("auth-error")
+	if len(errors) != 0 {
+		return res, status.Error(codes.PermissionDenied, strings.Join(errors, ", "))
+	}
+
+	role := md.Get("role")
+	if role[0] != "admin" {
+		res.Status = RESPONSE_FAILURE
+		return res, status.Error(codes.Unauthenticated, "operation not permitted")
+	}
+
 	name := req.GetName()
 	author := req.GetAuthor()
 	price := req.GetPrice()
@@ -55,6 +75,23 @@ func (m *ModifyBooksService) NewBook(ctx context.Context, req *gen.NewBookReques
 // delete: /v1/books/{id}
 func (m *ModifyBooksService) DeleteBooks(ctx context.Context, req *gen.DeleteBookRequest) (*gen.DeleteBookResponse, error) {
 	res := &gen.DeleteBookResponse{}
+	md, exists := metadata.FromIncomingContext(ctx)
+	if !exists {
+		res.Status = RESPONSE_FAILURE
+		return res, status.Error(codes.InvalidArgument, "invalid header")
+	}
+
+	errors := md.Get("auth-error")
+	if len(errors) != 0 {
+		return res, status.Error(codes.PermissionDenied, strings.Join(errors, ", "))
+	}
+
+	role := md.Get("role")
+	if role[0] != "admin" {
+		res.Status = RESPONSE_FAILURE
+		return res, status.Error(codes.Unauthenticated, "operation not permitted")
+	}
+
 	if err := m.DB.Where("id = ?", req.Id).Delete(&db.Book{}).Error; err != nil {
 		res.Status = RESPONSE_FAILURE
 		return res, status.Errorf(codes.Internal, "error while deleting book %s", err.Error())
@@ -66,6 +103,24 @@ func (m *ModifyBooksService) DeleteBooks(ctx context.Context, req *gen.DeleteBoo
 // patch: /v1/books
 func (m *ModifyBooksService) UpdateBooks(ctx context.Context, req *gen.UpdateBookRequest) (*gen.UpdateBookResponse, error) {
 	res := &gen.UpdateBookResponse{}
+	md, exists := metadata.FromIncomingContext(ctx)
+	if !exists {
+		res.Status = RESPONSE_FAILURE
+		return res, status.Error(codes.InvalidArgument, "invalid header")
+	}
+
+	errors := md.Get("auth-error")
+	if len(errors) != 0 {
+		return res, status.Error(codes.PermissionDenied, strings.Join(errors, ", "))
+	}
+
+	role := md.Get("role")
+	fmt.Println(role)
+	if role[0] != "admin" {
+		res.Status = RESPONSE_FAILURE
+		return res, status.Error(codes.Unauthenticated, "operation not permitted")
+	}
+
 	updatedBook := &db.Book{}
 	author := req.GetAuthor()
 	name := req.GetName()

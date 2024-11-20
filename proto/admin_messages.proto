@@ -15,7 +15,7 @@ message AdminLoginRequest {
 }
 message AdminLoginResponse {
     string status = 1;
-    string token = 2;
+    Admin user = 2;
 }
 message AdminCreateRequest {
     string username = 1;
@@ -23,7 +23,7 @@ message AdminCreateRequest {
 }
 message AdminCreateResponse {
     string status = 1;
-    string token = 2;
+    Admin user = 2;
 }
 
 message VerifyAdminRequest {
