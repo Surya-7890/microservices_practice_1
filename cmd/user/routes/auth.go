@@ -32,11 +32,12 @@ func (u *UserService) UserLogin(ctx context.Context, req *gen.UserLoginRequest) 
 		return res, status.Error(codes.Unauthenticated, "incorrect password")
 	}
 	res.Status = RESPONSE_SUCCESS
-	res.Token = "token_here"
-
-	ctx = context.WithValue(ctx, "token", "token")
-	ctx = context.WithValue(ctx, "username", user.Username)
-	ctx = context.WithValue(ctx, "user_id", user.ID)
+	res.User = &gen.User{
+		Id:       int32(user.ID),
+		Age:      user.Age,
+		Username: user.Username,
+		Name:     user.Name,
+	}
 
 	return res, nil
 }
@@ -76,11 +77,12 @@ func (u *UserService) UserSignup(ctx context.Context, req *gen.UserSignupRequest
 	}
 
 	res.Status = RESPONSE_SUCCESS
-	res.Token = "token_here"
-
-	ctx = context.WithValue(ctx, "token", "token")
-	ctx = context.WithValue(ctx, "username", user.Username)
-	ctx = context.WithValue(ctx, "user_id", user.ID)
+	res.User = &gen.User{
+		Id:       int32(user.ID),
+		Age:      user.Age,
+		Username: user.Username,
+		Name:     user.Name,
+	}
 
 	return res, nil
 }

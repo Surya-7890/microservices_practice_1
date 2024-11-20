@@ -27,6 +27,10 @@ func (a *AdminAuthService) AdminLogin(ctx context.Context, req *gen.AdminLoginRe
 		return res, status.Error(codes.PermissionDenied, "Incorrect Password")
 	}
 	res.Status = RESPONSE_SUCCESS
+	res.User = &gen.Admin{
+		Id:       int32(admin.ID),
+		Username: admin.Username,
+	}
 
 	return res, nil
 }
@@ -56,11 +60,12 @@ func (a *AdminAuthService) AdminCreate(ctx context.Context, req *gen.AdminCreate
 		res.Status = RESPONSE_FAILURE
 		return res, status.Error(codes.Unknown, "Unable To Create Admin")
 	}
-	res.Status = RESPONSE_SUCCESS
 
-	ctx = context.WithValue(ctx, "token", "token")
-	ctx = context.WithValue(ctx, "username", admin.Username)
-	ctx = context.WithValue(ctx, "user_id", admin.ID)
+	res.Status = RESPONSE_SUCCESS
+	res.User = &gen.Admin{
+		Id:       int32(admin.ID),
+		Username: admin.Username,
+	}
 
 	return res, nil
 }
