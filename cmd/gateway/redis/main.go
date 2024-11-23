@@ -2,7 +2,6 @@ package redis
 
 import (
 	"github.com/redis/go-redis/v9"
-	"github.com/spf13/viper"
 )
 
 type Redis struct {
@@ -10,8 +9,7 @@ type Redis struct {
 	UserDB  *redis.Client
 }
 
-func ConnectToRedis() *Redis {
-	conn_str := viper.GetString("redis")
+func ConnectToRedis(conn_str string) *Redis {
 	return &Redis{
 		AdminDB: redis.NewClient(&redis.Options{
 			Addr: conn_str,

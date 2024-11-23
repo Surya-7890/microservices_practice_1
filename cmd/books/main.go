@@ -6,22 +6,28 @@ import (
 	"github.com/Surya-7890/book_store/books/config"
 	"github.com/Surya-7890/book_store/books/db"
 	"github.com/Surya-7890/book_store/books/gen"
+	"github.com/Surya-7890/book_store/books/kafka"
 	"github.com/Surya-7890/book_store/books/routes"
-	"github.com/spf13/viper"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
-func main() {
-	config.LoadConfig()
+var (
+	App *config.Application
+)
 
-	port := viper.GetString("port")
-	listener, err := net.Listen("tcp", port)
+func init() {
+	App = config.LoadConfig()
+	App.Kafka = kafka.CreateWriters(&App.KafkaConfig)
+}
+
+func main() {
+	listener, err := net.Listen("tcp", App.Port)
 	if err != nil {
 		panic(err)
 	}
 
-	DB := db.ConnectToPostgres()
+	DB := db.ConnectToPostgres(App.Kafka, &App.DatabaseConfig)
 
 	server := grpc.NewServer()
 	gen.RegisterBooksServer(server, &routes.BooksService{DB: DB})

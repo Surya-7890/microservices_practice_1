@@ -15,8 +15,12 @@ import (
 
 var LogFilesMap = make(map[string]*os.File)
 
+var (
+	App *config.Application
+)
+
 func init() {
-	config.LoadConfig()
+	App = config.LoadConfig()
 }
 
 func handleLogs(reader *kafka.Reader, ctx context.Context, wg *sync.WaitGroup) {
@@ -32,9 +36,9 @@ func handleLogs(reader *kafka.Reader, ctx context.Context, wg *sync.WaitGroup) {
 }
 
 func main() {
-	readers := _kafka.CreateReaders()
-	_kafka.CreateLogFiles(LogFilesMap)
-	fmt.Println("readers", readers)
+	readers := _kafka.CreateReaders(&App.KafkaConfig)
+	_kafka.CreateLogFiles(App.KafkaConfig, LogFilesMap)
+
 	ctx := context.Background()
 
 	wg := &sync.WaitGroup{}
@@ -53,6 +57,7 @@ func main() {
 					fmt.Println(err.Error())
 					continue
 				}
+				fmt.Println(msg)
 				if file, ok := LogFilesMap[strings.Split(topic, "-")[0]]; ok || file != nil {
 					file.WriteString("[" + topic + "]: " + string(msg.Value) + "\n")
 				}

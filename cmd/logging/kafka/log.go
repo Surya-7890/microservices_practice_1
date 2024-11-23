@@ -1,14 +1,15 @@
 package kafka
 
 import (
-	"fmt"
 	"os"
 	"reflect"
 	"strings"
+
+	"github.com/Surya-7890/book_store/logging/config"
 )
 
-func CreateLogFiles(fileMap map[string]*os.File) {
-	_value := reflect.ValueOf(kafkaConfig.Readers)
+func CreateLogFiles(cfg config.KafkaConfig, fileMap map[string]*os.File) {
+	_value := reflect.ValueOf(cfg.Readers)
 	if err := os.Mkdir("logs", os.ModeDir); err != nil {
 		panic(err)
 	}
@@ -17,7 +18,7 @@ func CreateLogFiles(fileMap map[string]*os.File) {
 		if _, ok := fileMap[filename]; ok {
 			continue
 		}
-		fmt.Println(filename, _value.Field(i).String())
+
 		file, err := os.OpenFile("./logs/"+filename+".log", os.O_APPEND|os.O_CREATE|os.O_RDWR, 0644)
 		if err != nil {
 			continue

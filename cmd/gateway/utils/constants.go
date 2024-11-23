@@ -1,4 +1,4 @@
-package main
+package utils
 
 import "github.com/Surya-7890/book_store/gateway/gen"
 
@@ -21,10 +21,14 @@ const (
 	ROLE_USER   = "user"
 )
 
-type Middleware struct {
-	Key string
-}
-
 type AuthResponse interface {
 	*gen.Admin | *gen.User
 }
+
+type ERRORS string
+
+const (
+	HANDLER_REGISTRATION_ERROR ERRORS = "handler registration error"
+	JWT_AUTHORIZATION_ERROR    ERRORS = "jwt authorization error"
+	REDIS_ERROR                ERRORS = "redis error"
+)

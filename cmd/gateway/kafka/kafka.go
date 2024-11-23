@@ -2,40 +2,22 @@ package kafka
 
 import (
 	"fmt"
-	"log"
 	"reflect"
 	"time"
 
+	"github.com/Surya-7890/book_store/gateway/config"
 	"github.com/segmentio/kafka-go"
-	"github.com/spf13/viper"
 )
 
-type KafkaWriterConfig struct {
-	Error   string `yaml:"error"`
-	Info    string `yaml:"info"`
-	Warning string `yaml:"warning"`
-}
-
-type KafkaConfig struct {
-	Brokers []string          `yaml:"brokers"`
-	Address string            `yaml:"address"`
-	Writers KafkaWriterConfig `yaml:"writers"`
-}
-
 type KafkaWriters struct {
-	Error   *kafka.Writer `yaml:"error"`
-	Info    *kafka.Writer `yaml:"info"`
-	Warning *kafka.Writer `yaml:"warning"`
+	Error   *kafka.Writer `mapstructure:"error"`
+	Info    *kafka.Writer `mapstructure:"info"`
+	Warning *kafka.Writer `mapstructure:"warning"`
 }
 
-var kafkaConfig = &KafkaConfig{}
-
-func connectToKafka() *kafka.Conn {
-	if err := viper.UnmarshalKey("kafka", kafkaConfig); err != nil {
-		log.Fatalf("Error unmarshalling kafka config: %v", err)
-	}
+func connectToKafka(cfg *config.KafkaConfig) *kafka.Conn {
 	for i := 0; i < 10; i++ {
-		conn, err := kafka.Dial("tcp", kafkaConfig.Address)
+		conn, err := kafka.Dial("tcp", cfg.Address)
 		if err == nil {
 			return conn
 		}
@@ -57,8 +39,8 @@ func createKafkaTopics(conn *kafka.Conn, topic string) {
 	fmt.Println("created kafka topic:", topic)
 }
 
-func CreateTopics() {
-	conn := connectToKafka()
+func CreateTopics(cfg *config.KafkaConfig) {
+	conn := connectToKafka(cfg)
 	if conn == nil {
 		panic("error while connecting to kafka")
 	}
@@ -66,7 +48,7 @@ func CreateTopics() {
 	fmt.Println("connected to kafka")
 
 	// types and values of the topics fetched from config.yml file
-	writers := kafkaConfig.Writers
+	writers := cfg.Writers
 
 	_type := reflect.TypeOf(writers)
 	_value := reflect.ValueOf(writers)
@@ -78,8 +60,8 @@ func CreateTopics() {
 }
 
 /* returns a set of writers for logging purposes */
-func CreateWriters() *KafkaWriters {
-	writers := kafkaConfig.Writers
+func CreateWriters(cfg *config.KafkaConfig) *KafkaWriters {
+	writers := cfg.Writers
 	_type := reflect.TypeOf(writers)
 	_value := reflect.ValueOf(writers)
 
@@ -88,7 +70,7 @@ func CreateWriters() *KafkaWriters {
 
 	for i := 0; i < _type.NumField(); i++ {
 		topic := _value.Field(i).String()
-		writer := createNewWriter(topic)
+		writer := createNewWriter(cfg, topic)
 
 		field := _elem.FieldByName(_type.Field(i).Name)
 		if field.IsValid() && field.CanSet() {
@@ -98,9 +80,9 @@ func CreateWriters() *KafkaWriters {
 	return _return
 }
 
-func createNewWriter(topic string) *kafka.Writer {
+func createNewWriter(cfg *config.KafkaConfig, topic string) *kafka.Writer {
 	return kafka.NewWriter(kafka.WriterConfig{
-		Brokers: kafkaConfig.Brokers,
+		Brokers: cfg.Brokers,
 		Topic:   topic,
 	})
 }

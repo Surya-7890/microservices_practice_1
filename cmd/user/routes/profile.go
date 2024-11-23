@@ -3,10 +3,14 @@ package routes
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"strings"
 
+	"github.com/Surya-7890/book_store/user/config"
 	"github.com/Surya-7890/book_store/user/db"
 	"github.com/Surya-7890/book_store/user/gen"
+	"github.com/Surya-7890/book_store/user/utils"
+	"github.com/segmentio/kafka-go"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
@@ -15,7 +19,8 @@ import (
 
 type UserProfileService struct {
 	gen.UnimplementedUserProfileServer
-	DB *gorm.DB
+	DB    *gorm.DB
+	Kafka *config.KafkaWriters
 }
 
 /* GET: /v1/user/profile */
@@ -28,16 +33,28 @@ func (u *UserService) GetUser(ctx context.Context, req *gen.GetUserRequest) (*ge
 
 	errors := md.Get("auth-error")
 	if len(errors) != 0 {
+		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(utils.AUTH_ERROR),
+			Value: []byte(strings.Join(errors, " ")),
+		})
 		return res, status.Error(codes.PermissionDenied, strings.Join(errors, ", "))
 	}
 
 	role := md.Get("role")
 	if role[0] != "admin" {
+		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(utils.AUTH_ERROR),
+			Value: []byte("operation not permitted"),
+		})
 		return res, status.Error(codes.Unauthenticated, "operation not permitted")
 	}
 
 	user_string := md.Get("user")[0]
 	if user_string == "" {
+		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(utils.AUTH_ERROR),
+			Value: []byte("invalid user"),
+		})
 		return res, status.Error(codes.Unauthenticated, "invalid user")
 	}
 
@@ -45,6 +62,10 @@ func (u *UserService) GetUser(ctx context.Context, req *gen.GetUserRequest) (*ge
 
 	err := json.Unmarshal([]byte(user_string), &user)
 	if err != nil {
+		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(utils.INTERNAL_ERROR),
+			Value: []byte(err.Error()),
+		})
 		return res, status.Error(codes.Unauthenticated, "invalid user found")
 	}
 
@@ -52,6 +73,10 @@ func (u *UserService) GetUser(ctx context.Context, req *gen.GetUserRequest) (*ge
 	res.Name = user.Name
 	res.Age = user.Age
 
+	u.Kafka.Info.WriteMessages(context.Background(), kafka.Message{
+		Key:   []byte(utils.USER_INFO),
+		Value: []byte(fmt.Sprintf("user profile requested %v", user.ID)),
+	})
 	return res, nil
 }
 
@@ -60,21 +85,37 @@ func (u *UserService) DeleteUser(ctx context.Context, req *gen.DeleteUserRequest
 	res := &gen.DeleteUserResponse{}
 	md, exists := metadata.FromIncomingContext(ctx)
 	if !exists {
+		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(utils.AUTH_ERROR),
+			Value: []byte("invalid header"),
+		})
 		return res, status.Error(codes.InvalidArgument, "invalid header")
 	}
 
 	errors := md.Get("auth-error")
 	if len(errors) != 0 {
+		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(utils.AUTH_ERROR),
+			Value: []byte(strings.Join(errors, " ")),
+		})
 		return res, status.Error(codes.PermissionDenied, strings.Join(errors, ", "))
 	}
 
 	role := md.Get("role")
 	if role[0] != "admin" {
+		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(utils.AUTH_ERROR),
+			Value: []byte("operation not permitted"),
+		})
 		return res, status.Error(codes.Unauthenticated, "operation not permitted")
 	}
 
 	user_string := md.Get("user")[0]
 	if user_string == "" {
+		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(utils.AUTH_ERROR),
+			Value: []byte("invalid user"),
+		})
 		return res, status.Error(codes.Unauthenticated, "invalid user")
 	}
 
@@ -82,19 +123,35 @@ func (u *UserService) DeleteUser(ctx context.Context, req *gen.DeleteUserRequest
 
 	err := json.Unmarshal([]byte(user_string), &user)
 	if err != nil {
+		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(utils.INTERNAL_ERROR),
+			Value: []byte(err.Error()),
+		})
 		return res, status.Errorf(codes.Unauthenticated, "invalid user found %s", err.Error())
 	}
 
 	if user.Username == "" {
+		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(utils.INTERNAL_ERROR),
+			Value: []byte("user not found"),
+		})
 		return res, status.Error(codes.Unauthenticated, "error with the user found inside token")
 	}
 
 	if err := u.DB.Where("username = ?", user.Username).Delete(&db.User{}).Error; err != nil {
 		res.Status = RESPONSE_FAILURE
+		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(utils.DB_ERROR),
+			Value: []byte(err.Error()),
+		})
 		return res, status.Errorf(codes.Internal, "error while deleting user %s", err.Error())
 	}
 
 	res.Status = RESPONSE_SUCCESS
+	u.Kafka.Info.WriteMessages(context.Background(), kafka.Message{
+		Key:   []byte(utils.USER_INFO),
+		Value: []byte("deleted user successfully"),
+	})
 	return res, nil
 }
 
@@ -103,21 +160,37 @@ func (u *UserService) UpdateUser(ctx context.Context, req *gen.UpdateUserRequest
 	res := &gen.UpdateUserResponse{}
 	md, exists := metadata.FromIncomingContext(ctx)
 	if !exists {
+		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(utils.AUTH_ERROR),
+			Value: []byte("invalid header"),
+		})
 		return res, status.Error(codes.InvalidArgument, "invalid header")
 	}
 
 	errors := md.Get("auth-error")
 	if len(errors) != 0 {
+		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(utils.AUTH_ERROR),
+			Value: []byte(strings.Join(errors, " ")),
+		})
 		return res, status.Error(codes.PermissionDenied, strings.Join(errors, ", "))
 	}
 
 	role := md.Get("role")
 	if role[0] != "admin" {
+		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(utils.AUTH_ERROR),
+			Value: []byte("operation not permitted"),
+		})
 		return res, status.Error(codes.Unauthenticated, "operation not permitted")
 	}
 
 	user_string := md.Get("user")[0]
 	if user_string == "" {
+		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(utils.INTERNAL_ERROR),
+			Value: []byte("invalid user"),
+		})
 		return res, status.Error(codes.Unauthenticated, "invalid user")
 	}
 
@@ -125,6 +198,10 @@ func (u *UserService) UpdateUser(ctx context.Context, req *gen.UpdateUserRequest
 
 	err := json.Unmarshal([]byte(user_string), &user)
 	if err != nil {
+		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(utils.INTERNAL_ERROR),
+			Value: []byte("invalid user found"),
+		})
 		return res, status.Error(codes.Unauthenticated, "invalid user found")
 	}
 
@@ -148,6 +225,10 @@ func (u *UserService) UpdateUser(ctx context.Context, req *gen.UpdateUserRequest
 
 	if err := u.DB.Where("username = ?", user.Username).Updates(updates).Error; err != nil {
 		res.Status = RESPONSE_FAILURE
+		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(utils.DB_ERROR),
+			Value: []byte("operation not permitted"),
+		})
 		return res, status.Errorf(codes.Internal, "error while updating user %s", err.Error())
 	}
 

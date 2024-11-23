@@ -5,7 +5,7 @@ import (
 	"reflect"
 	"time"
 
-	"github.com/Surya-7890/book_store/logging/config"
+	"github.com/Surya-7890/book_store/admin/config"
 	"github.com/segmentio/kafka-go"
 )
 
@@ -24,35 +24,34 @@ func checkKafkaConn(broker string) error {
 	return fmt.Errorf("couldnt connect to kafka")
 }
 
-func CreateReaders(cfg *config.KafkaConfig) *config.KafkaReaders {
+/* returns a set of writers for logging purposes */
+func CreateWriters(cfg *config.KafkaConfig) *config.KafkaWriters {
 	if err := checkKafkaConn(cfg.Brokers[0]); err != nil {
 		panic(err)
 	}
 
-	_type := reflect.TypeOf(cfg.Readers)
-	_value := reflect.ValueOf(cfg.Readers)
+	writers := cfg.Writers
+	_type := reflect.TypeOf(writers)
+	_value := reflect.ValueOf(writers)
 
-	_return := &config.KafkaReaders{}
-
+	_return := &config.KafkaWriters{}
 	_elem := reflect.ValueOf(_return).Elem()
 
 	for i := 0; i < _type.NumField(); i++ {
 		topic := _value.Field(i).String()
-		reader := createNewReader(cfg, topic)
+		writer := createNewWriter(cfg, topic)
 
 		field := _elem.FieldByName(_type.Field(i).Name)
 		if field.IsValid() && field.CanSet() {
-			field.Set(reflect.ValueOf(reader))
+			field.Set(reflect.ValueOf(writer))
 		}
 	}
-
 	return _return
 }
 
-func createNewReader(cfg *config.KafkaConfig, topic string) *kafka.Reader {
-	return kafka.NewReader(kafka.ReaderConfig{
+func createNewWriter(cfg *config.KafkaConfig, topic string) *kafka.Writer {
+	return kafka.NewWriter(kafka.WriterConfig{
 		Brokers: cfg.Brokers,
 		Topic:   topic,
-		GroupID: "logging",
 	})
 }

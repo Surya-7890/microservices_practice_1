@@ -2,60 +2,46 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/Surya-7890/book_store/gateway/config"
 	_kafka "github.com/Surya-7890/book_store/gateway/kafka"
 	"github.com/Surya-7890/book_store/gateway/redis"
 	gwruntime "github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"github.com/segmentio/kafka-go"
-	"github.com/spf13/viper"
 )
 
 var (
 	Redis *redis.Redis
+	Kafka *_kafka.KafkaWriters
 	ctx   = context.Background()
+	App   *config.Application
 )
 
 func init() {
-	config.LoadConfig()
-	_kafka.CreateTopics()
-	Redis = redis.ConnectToRedis()
+	App = config.LoadConfig()
+	_kafka.CreateTopics(&App.Kafka)
+	Redis = redis.ConnectToRedis(App.Redis)
 }
 
 func main() {
 	mw := Middleware{
-		Key: viper.GetString("jwt_key"),
+		Key: App.JWT_SECRET,
 	}
+	go func(cfg *config.KafkaConfig) {
+		Kafka = _kafka.CreateWriters(cfg)
+	}(&App.Kafka)
 	gw := gwruntime.NewServeMux([]gwruntime.ServeMuxOption{
 		gwruntime.WithMetadata(mw.requestInterceptor),
 		gwruntime.WithForwardResponseOption(mw.responseInterceptor),
 	}...)
-	setup(gw)
+	setup(gw, App)
 
 	mux := http.NewServeMux()
 	mux.Handle("/", gw)
 
-	writer := _kafka.CreateWriters()
-	go func() {
-		for {
-			err := writer.Info.WriteMessages(context.Background(), kafka.Message{
-				Key:   []byte("sample"),
-				Value: []byte("sample testing"),
-			})
-			if err != nil {
-				fmt.Println("error while writing", err.Error())
-				continue
-			}
-			time.Sleep(5 * time.Second)
-		}
-	}()
-
 	s := http.Server{
 		Handler: mux,
-		Addr:    ":10000",
+		Addr:    App.Port,
 	}
 
 	err := s.ListenAndServe()

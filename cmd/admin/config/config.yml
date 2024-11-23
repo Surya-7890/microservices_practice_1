@@ -6,3 +6,11 @@ postgres:
   password: 123
   dbname: book_store_admin
   sslmode: disable
+kafka:
+  address: kafka:9092
+  brokers:
+    - kafka:9092
+  writers:
+    error: error-log
+    info: info-log
+    warning: warning-log

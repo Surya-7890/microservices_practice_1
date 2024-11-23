@@ -2,9 +2,13 @@ package routes
 
 import (
 	"context"
+	"fmt"
 
+	"github.com/Surya-7890/book_store/admin/config"
 	"github.com/Surya-7890/book_store/admin/db"
 	"github.com/Surya-7890/book_store/admin/gen"
+	"github.com/Surya-7890/book_store/admin/utils"
+	"github.com/segmentio/kafka-go"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"gorm.io/gorm"
@@ -12,7 +16,8 @@ import (
 
 type AdminAuthService struct {
 	gen.UnimplementedAdminAuthServer
-	DB *gorm.DB
+	DB    *gorm.DB
+	Kafka *config.KafkaWriters
 }
 
 /* POST: /v1/admin/login */
@@ -23,15 +28,23 @@ func (a *AdminAuthService) AdminLogin(ctx context.Context, req *gen.AdminLoginRe
 	a.DB.Where("username = ?", req.GetUsername()).First(&admin)
 
 	if !admin.IsCorrectPassword(req.GetPassword()) {
+		a.Kafka.Error.WriteMessages(ctx, kafka.Message{
+			Key:   []byte(utils.AUTH_ERROR),
+			Value: []byte("incorrect password"),
+		})
 		res.Status = RESPONSE_FAILURE
 		return res, status.Error(codes.PermissionDenied, "Incorrect Password")
 	}
+
 	res.Status = RESPONSE_SUCCESS
 	res.User = &gen.Admin{
 		Id:       int32(admin.ID),
 		Username: admin.Username,
 	}
-
+	a.Kafka.Info.WriteMessages(ctx, kafka.Message{
+		Key:   []byte(utils.ADMIN_LOGIN),
+		Value: []byte(fmt.Sprintf("admin login successful: (%d)", admin.ID)),
+	})
 	return res, nil
 }
 
@@ -43,7 +56,11 @@ func (a *AdminAuthService) AdminCreate(ctx context.Context, req *gen.AdminCreate
 		Username: req.GetUsername(),
 		Password: req.GetPassword(),
 	}
-	if admin.AlreadyExists(a.DB) {
+	if admin.AlreadyExists(a.Kafka, a.DB) {
+		a.Kafka.Error.WriteMessages(ctx, kafka.Message{
+			Key:   []byte(utils.AUTH_ERROR),
+			Value: []byte("admin already exists"),
+		})
 		res.Status = RESPONSE_FAILURE
 		return res, status.Error(codes.AlreadyExists, "Admin With The Username Already Exists")
 	}
@@ -52,12 +69,20 @@ func (a *AdminAuthService) AdminCreate(ctx context.Context, req *gen.AdminCreate
 	// handle errors while creating
 	if tx.Error != nil {
 		res.Status = RESPONSE_FAILURE
+		a.Kafka.Error.WriteMessages(ctx, kafka.Message{
+			Key:   []byte(utils.AUTH_ERROR),
+			Value: []byte(tx.Error.Error()),
+		})
 		return res, status.Errorf(codes.Internal, "Unable To Create Admin: %s", tx.Error.Error())
 	}
 
 	// handle rows affected on creation
 	if tx.RowsAffected == 0 {
 		res.Status = RESPONSE_FAILURE
+		a.Kafka.Error.WriteMessages(ctx, kafka.Message{
+			Key:   []byte(utils.AUTH_ERROR),
+			Value: []byte("unalbe to create admin"),
+		})
 		return res, status.Error(codes.Unknown, "Unable To Create Admin")
 	}
 
@@ -66,6 +91,11 @@ func (a *AdminAuthService) AdminCreate(ctx context.Context, req *gen.AdminCreate
 		Id:       int32(admin.ID),
 		Username: admin.Username,
 	}
+
+	a.Kafka.Info.WriteMessages(ctx, kafka.Message{
+		Key:   []byte(utils.ADMIN_CREATE),
+		Value: []byte(fmt.Sprintf("admin created successfully: (%d)", admin.ID)),
+	})
 
 	return res, nil
 }
