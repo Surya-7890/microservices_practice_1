@@ -1,9 +1,12 @@
 package db
 
 import (
+	"context"
 	"fmt"
 
 	"github.com/Surya-7890/book_store/admin/config"
+	"github.com/Surya-7890/book_store/admin/utils"
+	"github.com/segmentio/kafka-go"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -19,7 +22,7 @@ func getPostgresConnectionString(cfg *config.DBConfig) (string, error) {
 	), nil
 }
 
-func ConnectToPostgres(cfg *config.DBConfig) *gorm.DB {
+func ConnectToPostgres(Kafka *config.KafkaWriters, cfg *config.DBConfig) *gorm.DB {
 	postgres_uri, err := getPostgresConnectionString(cfg)
 	if err != nil {
 		panic(err)
@@ -31,5 +34,9 @@ func ConnectToPostgres(cfg *config.DBConfig) *gorm.DB {
 	if err := db.AutoMigrate(&Admin{}); err != nil {
 		panic(err)
 	}
+	Kafka.Info.WriteMessages(context.Background(), kafka.Message{
+		Key:   []byte(utils.DB_INFO),
+		Value: []byte("[user-service]: connected to postgres"),
+	})
 	return db
 }

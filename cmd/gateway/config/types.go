@@ -1,5 +1,13 @@
 package config
 
+import "github.com/segmentio/kafka-go"
+
+type KafkaWriters struct {
+	Error   *kafka.Writer `mapstructure:"error"`
+	Info    *kafka.Writer `mapstructure:"info"`
+	Warning *kafka.Writer `mapstructure:"warning"`
+}
+
 type KafkaWriterConfig struct {
 	Error   string `mapstructure:"error"`
 	Info    string `mapstructure:"info"`
@@ -18,11 +26,12 @@ type Service struct {
 }
 
 type Application struct {
-	Kafka      KafkaConfig `mapstructure:"kafka"`
-	Port       string      `mapstructure:"port"`
-	JWT_SECRET string      `mapstructure:"jwt_key"`
-	User       Service     `mapstructure:"user"`
-	Admin      Service     `mapstructure:"admin"`
-	Books      Service     `mapstructure:"books"`
-	Redis      string      `mapstructure:"redis"`
+	KafkaConfig KafkaConfig `mapstructure:"kafka"`
+	Port        string      `mapstructure:"port"`
+	JWT_SECRET  string      `mapstructure:"jwt_key"`
+	User        Service     `mapstructure:"user"`
+	Admin       Service     `mapstructure:"admin"`
+	Books       Service     `mapstructure:"books"`
+	Redis       string      `mapstructure:"redis"`
+	Kafka       *KafkaWriters
 }

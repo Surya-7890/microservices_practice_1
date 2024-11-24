@@ -47,14 +47,9 @@ func ConnectToPostgres(Kafka *config.KafkaWriters, cfg *config.DBConfig) *gorm.D
 		panic(err)
 	}
 
-	err = Kafka.Info.WriteMessages(context.Background(), kafka.Message{
+	Kafka.Info.WriteMessages(context.Background(), kafka.Message{
 		Key:   []byte(utils.DB_INFO),
-		Value: []byte("connected to postgres successfully"),
+		Value: []byte("[books-service]: connected to postgres"),
 	})
-
-	if err != nil {
-		fmt.Println("err db:", err.Error())
-	}
-
 	return db
 }

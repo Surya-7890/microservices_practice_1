@@ -9,12 +9,6 @@ import (
 	"github.com/segmentio/kafka-go"
 )
 
-type KafkaWriters struct {
-	Error   *kafka.Writer `mapstructure:"error"`
-	Info    *kafka.Writer `mapstructure:"info"`
-	Warning *kafka.Writer `mapstructure:"warning"`
-}
-
 func connectToKafka(cfg *config.KafkaConfig) *kafka.Conn {
 	for i := 0; i < 10; i++ {
 		conn, err := kafka.Dial("tcp", cfg.Address)
@@ -60,12 +54,12 @@ func CreateTopics(cfg *config.KafkaConfig) {
 }
 
 /* returns a set of writers for logging purposes */
-func CreateWriters(cfg *config.KafkaConfig) *KafkaWriters {
+func CreateWriters(cfg *config.KafkaConfig) *config.KafkaWriters {
 	writers := cfg.Writers
 	_type := reflect.TypeOf(writers)
 	_value := reflect.ValueOf(writers)
 
-	_return := &KafkaWriters{}
+	_return := &config.KafkaWriters{}
 	_elem := reflect.ValueOf(_return).Elem()
 
 	for i := 0; i < _type.NumField(); i++ {

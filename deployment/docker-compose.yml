@@ -15,6 +15,7 @@ services:
     container_name: gateway_service
     depends_on:
       - kafka
+      - logging
     ports:
       - 10000:10000
 
@@ -34,7 +35,7 @@ services:
     container_name: logging_service
     depends_on:
       - logging_mongodb
-      - gateway
+      - kafka
 
   user:
     build:

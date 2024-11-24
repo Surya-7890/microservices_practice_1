@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net"
 
@@ -9,6 +10,8 @@ import (
 	"github.com/Surya-7890/book_store/user/gen"
 	"github.com/Surya-7890/book_store/user/kafka"
 	"github.com/Surya-7890/book_store/user/routes"
+	"github.com/Surya-7890/book_store/user/utils"
+	_kafka "github.com/segmentio/kafka-go"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -43,6 +46,11 @@ func main() {
 	})
 
 	reflection.Register(server)
+
+	App.Kafka.Info.WriteMessages(context.Background(), _kafka.Message{
+		Key:   []byte(utils.SERVER_INFO),
+		Value: []byte("[user-service]: running server... on port: " + App.Port),
+	})
 
 	err = server.Serve(listener)
 	if err != nil {

@@ -57,7 +57,7 @@ func main() {
 					fmt.Println(err.Error())
 					continue
 				}
-				fmt.Println(msg)
+				fmt.Println(msg.Value)
 				if file, ok := LogFilesMap[strings.Split(topic, "-")[0]]; ok || file != nil {
 					file.WriteString("[" + topic + "]: " + string(msg.Value) + "\n")
 				}

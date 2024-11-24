@@ -49,7 +49,7 @@ func ConnectToPostgres(Kafka *config.KafkaWriters, cfg *config.DBConfig) *gorm.D
 	}
 	Kafka.Info.WriteMessages(context.Background(), kafka.Message{
 		Key:   []byte(utils.DB_INFO),
-		Value: []byte("connected to kafka"),
+		Value: []byte("[user-service]: connected to postgres"),
 	})
 	return db
 }

@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/Surya-7890/book_store/gateway/config"
 	"github.com/Surya-7890/book_store/gateway/gen"
 	"github.com/Surya-7890/book_store/gateway/utils"
 	"github.com/golang-jwt/jwt/v5"
@@ -19,10 +20,11 @@ import (
 )
 
 type Middleware struct {
-	Key string
+	Key   string
+	Kafka *config.KafkaWriters
 }
 
-func storeInRedis[T utils.AuthResponse](id int32, key string, user T, role string) (string, error) {
+func storeInRedis[T utils.AuthResponse](id int32, key string, user T, role string, Kafka *config.KafkaWriters) (string, error) {
 	claims := jwt.MapClaims{
 		"id":   id,
 		"role": role,
@@ -74,7 +76,7 @@ func (m *Middleware) responseInterceptor(ctx context.Context, w http.ResponseWri
 	switch r := resp.(type) {
 	case *gen.AdminLoginResponse:
 		user := r.User
-		token_string, err := storeInRedis(user.Id, m.Key, user, utils.ROLE_ADMIN)
+		token_string, err := storeInRedis(user.Id, m.Key, user, utils.ROLE_ADMIN, m.Kafka)
 		if err != nil {
 			return err
 		}
@@ -82,7 +84,7 @@ func (m *Middleware) responseInterceptor(ctx context.Context, w http.ResponseWri
 		break
 	case *gen.AdminCreateResponse:
 		user := r.User
-		token_string, err := storeInRedis(user.Id, m.Key, user, utils.ROLE_ADMIN)
+		token_string, err := storeInRedis(user.Id, m.Key, user, utils.ROLE_ADMIN, m.Kafka)
 		if err != nil {
 			return err
 		}
@@ -90,7 +92,7 @@ func (m *Middleware) responseInterceptor(ctx context.Context, w http.ResponseWri
 		break
 	case *gen.UserLoginResponse:
 		user := r.User
-		token_string, err := storeInRedis(user.Id, m.Key, user, utils.ROLE_USER)
+		token_string, err := storeInRedis(user.Id, m.Key, user, utils.ROLE_USER, m.Kafka)
 		if err != nil {
 			return err
 		}
@@ -98,7 +100,7 @@ func (m *Middleware) responseInterceptor(ctx context.Context, w http.ResponseWri
 		break
 	case *gen.UserSignupResponse:
 		user := r.User
-		token_string, err := storeInRedis(user.Id, m.Key, user, utils.ROLE_USER)
+		token_string, err := storeInRedis(user.Id, m.Key, user, utils.ROLE_USER, m.Kafka)
 		if err != nil {
 			return err
 		}
@@ -116,7 +118,7 @@ func (m *Middleware) requestInterceptor(ctx context.Context, req *http.Request) 
 	authHeader := req.Header.Get("Authorization")
 
 	if len(authHeader) == 0 || !strings.HasPrefix(authHeader, "Bearer ") {
-		Kafka.Error.WriteMessages(ctx, kafka.Message{
+		m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.JWT_AUTHORIZATION_ERROR),
 			Value: []byte("missing header"),
 		})
@@ -126,7 +128,7 @@ func (m *Middleware) requestInterceptor(ctx context.Context, req *http.Request) 
 	token_string := strings.TrimPrefix(authHeader, "Bearer ")
 
 	if len(token_string) == 0 {
-		Kafka.Error.WriteMessages(ctx, kafka.Message{
+		m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.JWT_AUTHORIZATION_ERROR),
 			Value: []byte("missing token"),
 		})
@@ -135,7 +137,7 @@ func (m *Middleware) requestInterceptor(ctx context.Context, req *http.Request) 
 
 	token, err := jwt.Parse(token_string, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
-			Kafka.Error.WriteMessages(ctx, kafka.Message{
+			m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 				Key:   []byte(utils.JWT_AUTHORIZATION_ERROR),
 				Value: []byte("error while parsing token, unexpected signing method"),
 			})
@@ -145,7 +147,7 @@ func (m *Middleware) requestInterceptor(ctx context.Context, req *http.Request) 
 	})
 
 	if err != nil {
-		Kafka.Error.WriteMessages(ctx, kafka.Message{
+		m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.JWT_AUTHORIZATION_ERROR),
 			Value: []byte("error while parsing token " + err.Error()),
 		})
@@ -154,7 +156,7 @@ func (m *Middleware) requestInterceptor(ctx context.Context, req *http.Request) 
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok || !token.Valid {
-		Kafka.Error.WriteMessages(ctx, kafka.Message{
+		m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.JWT_AUTHORIZATION_ERROR),
 			Value: []byte("invalid token claims"),
 		})
@@ -163,7 +165,7 @@ func (m *Middleware) requestInterceptor(ctx context.Context, req *http.Request) 
 
 	id, ok := claims["id"]
 	if !ok {
-		Kafka.Error.WriteMessages(ctx, kafka.Message{
+		m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.JWT_AUTHORIZATION_ERROR),
 			Value: []byte("invalid key id for jwt claims"),
 		})
@@ -178,7 +180,7 @@ func (m *Middleware) requestInterceptor(ctx context.Context, req *http.Request) 
 	if strings.Contains(path, utils.AdminRoutes) && req.Method != http.MethodGet {
 		role, ok := claims["role"]
 		if !ok {
-			Kafka.Error.WriteMessages(ctx, kafka.Message{
+			m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 				Key:   []byte(utils.JWT_AUTHORIZATION_ERROR),
 				Value: []byte("unauthorized"),
 			})
@@ -186,14 +188,14 @@ func (m *Middleware) requestInterceptor(ctx context.Context, req *http.Request) 
 		}
 		roleStr, ok := role.(string)
 		if !ok {
-			Kafka.Error.WriteMessages(ctx, kafka.Message{
+			m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 				Key:   []byte(utils.JWT_AUTHORIZATION_ERROR),
 				Value: []byte("invalid role format"),
 			})
 			return metadata.Pairs(utils.AUTH_ERROR, "invalid role format")
 		}
 		if roleStr != utils.ROLE_ADMIN {
-			Kafka.Error.WriteMessages(ctx, kafka.Message{
+			m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 				Key:   []byte(utils.JWT_AUTHORIZATION_ERROR),
 				Value: []byte("unauthorized, requires admin privilege"),
 			})
@@ -201,7 +203,7 @@ func (m *Middleware) requestInterceptor(ctx context.Context, req *http.Request) 
 		}
 		user, err := Redis.AdminDB.Get(ctx, id_string).Result()
 		if err == redis.Nil {
-			Kafka.Error.WriteMessages(ctx, kafka.Message{
+			m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 				Key:   []byte(utils.REDIS_ERROR),
 				Value: []byte(err.Error()),
 			})
@@ -213,7 +215,7 @@ func (m *Middleware) requestInterceptor(ctx context.Context, req *http.Request) 
 			map_["role"] = string(utils.ROLE_ADMIN)
 			return metadata.New(map_)
 		} else if err != redis.Nil {
-			Kafka.Error.WriteMessages(ctx, kafka.Message{
+			m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 				Key:   []byte(utils.REDIS_ERROR),
 				Value: []byte(err.Error()),
 			})
@@ -223,7 +225,7 @@ func (m *Middleware) requestInterceptor(ctx context.Context, req *http.Request) 
 
 	user, err := Redis.UserDB.Get(ctx, id_string).Result()
 	if err == redis.Nil {
-		Kafka.Error.WriteMessages(ctx, kafka.Message{
+		m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.REDIS_ERROR),
 			Value: []byte(err.Error()),
 		})
@@ -233,7 +235,7 @@ func (m *Middleware) requestInterceptor(ctx context.Context, req *http.Request) 
 		map_["role"] = string(utils.ROLE_USER)
 		return metadata.New(map_)
 	} else if err != redis.Nil {
-		Kafka.Error.WriteMessages(ctx, kafka.Message{
+		m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.REDIS_ERROR),
 			Value: []byte(err.Error()),
 		})

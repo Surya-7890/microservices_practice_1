@@ -1,6 +1,7 @@
 package config
 
 import (
+	"fmt"
 	"log"
 	"os"
 
@@ -22,6 +23,8 @@ func LoadConfig() *Application {
 	if err != nil {
 		panic(err)
 	}
+
+	fmt.Println(app.KafkaConfig)
 
 	return app
 }

@@ -162,7 +162,7 @@ func (u *UserService) UpdateUser(ctx context.Context, req *gen.UpdateUserRequest
 	if !exists {
 		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.AUTH_ERROR),
-			Value: []byte("invalid header"),
+			Value: []byte("[user-service]: invalid header"),
 		})
 		return res, status.Error(codes.InvalidArgument, "invalid header")
 	}
@@ -171,7 +171,7 @@ func (u *UserService) UpdateUser(ctx context.Context, req *gen.UpdateUserRequest
 	if len(errors) != 0 {
 		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.AUTH_ERROR),
-			Value: []byte(strings.Join(errors, " ")),
+			Value: []byte("[user-service]: " + strings.Join(errors, " ")),
 		})
 		return res, status.Error(codes.PermissionDenied, strings.Join(errors, ", "))
 	}
@@ -180,7 +180,7 @@ func (u *UserService) UpdateUser(ctx context.Context, req *gen.UpdateUserRequest
 	if role[0] != "admin" {
 		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.AUTH_ERROR),
-			Value: []byte("operation not permitted"),
+			Value: []byte("[user-service]: operation not permitted"),
 		})
 		return res, status.Error(codes.Unauthenticated, "operation not permitted")
 	}
@@ -189,7 +189,7 @@ func (u *UserService) UpdateUser(ctx context.Context, req *gen.UpdateUserRequest
 	if user_string == "" {
 		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.INTERNAL_ERROR),
-			Value: []byte("invalid user"),
+			Value: []byte("[user-service]: invalid user"),
 		})
 		return res, status.Error(codes.Unauthenticated, "invalid user")
 	}
@@ -200,7 +200,7 @@ func (u *UserService) UpdateUser(ctx context.Context, req *gen.UpdateUserRequest
 	if err != nil {
 		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.INTERNAL_ERROR),
-			Value: []byte("invalid user found"),
+			Value: []byte("[user-service]: invalid user found"),
 		})
 		return res, status.Error(codes.Unauthenticated, "invalid user found")
 	}
@@ -227,7 +227,7 @@ func (u *UserService) UpdateUser(ctx context.Context, req *gen.UpdateUserRequest
 		res.Status = RESPONSE_FAILURE
 		u.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.DB_ERROR),
-			Value: []byte("operation not permitted"),
+			Value: []byte("[user-service]: operation not permitted"),
 		})
 		return res, status.Errorf(codes.Internal, "error while updating user %s", err.Error())
 	}

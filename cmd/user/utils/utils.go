@@ -13,4 +13,5 @@ const (
 	USER_LOGIN  INFO = "user login successful (user service)"
 	USER_INFO   INFO = "user info (user service)"
 	DB_INFO     INFO = "db info (user service)"
+	SERVER_INFO INFO = "server info (user service)"
 )

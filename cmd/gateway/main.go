@@ -2,34 +2,37 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 
 	"github.com/Surya-7890/book_store/gateway/config"
 	_kafka "github.com/Surya-7890/book_store/gateway/kafka"
 	"github.com/Surya-7890/book_store/gateway/redis"
+	"github.com/Surya-7890/book_store/gateway/utils"
 	gwruntime "github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
+	"github.com/segmentio/kafka-go"
 )
 
 var (
 	Redis *redis.Redis
-	Kafka *_kafka.KafkaWriters
 	ctx   = context.Background()
 	App   *config.Application
 )
 
 func init() {
 	App = config.LoadConfig()
-	_kafka.CreateTopics(&App.Kafka)
+	_kafka.CreateTopics(&App.KafkaConfig)
 	Redis = redis.ConnectToRedis(App.Redis)
 }
 
 func main() {
 	mw := Middleware{
-		Key: App.JWT_SECRET,
+		Key:   App.JWT_SECRET,
+		Kafka: App.Kafka,
 	}
-	go func(cfg *config.KafkaConfig) {
-		Kafka = _kafka.CreateWriters(cfg)
-	}(&App.Kafka)
+	go func(cfg *config.KafkaConfig, App *config.Application) {
+		App.Kafka = _kafka.CreateWriters(cfg)
+	}(&App.KafkaConfig, App)
 	gw := gwruntime.NewServeMux([]gwruntime.ServeMuxOption{
 		gwruntime.WithMetadata(mw.requestInterceptor),
 		gwruntime.WithForwardResponseOption(mw.responseInterceptor),
@@ -44,7 +47,16 @@ func main() {
 		Addr:    App.Port,
 	}
 
-	err := s.ListenAndServe()
+	err := App.Kafka.Info.WriteMessages(context.Background(), kafka.Message{
+		Key:   []byte(utils.SERVER_INFO),
+		Value: []byte("[gateway-service]: running server... on port: " + App.Port),
+	})
+
+	if err != nil {
+		fmt.Println(err.Error())
+	}
+
+	err = s.ListenAndServe()
 	if err != nil {
 		panic(err)
 	}

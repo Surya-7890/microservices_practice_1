@@ -3,6 +3,7 @@ package utils
 import "github.com/Surya-7890/book_store/gateway/gen"
 
 type AUTH_ROUTES string
+type INFO string
 
 const (
 	AUTH_ERROR = "auth-error"
@@ -28,7 +29,9 @@ type AuthResponse interface {
 type ERRORS string
 
 const (
-	HANDLER_REGISTRATION_ERROR ERRORS = "handler registration error"
-	JWT_AUTHORIZATION_ERROR    ERRORS = "jwt authorization error"
-	REDIS_ERROR                ERRORS = "redis error"
+	HANDLER_REGISTRATION_ERROR ERRORS = "handler registration error (auth service)"
+	JWT_AUTHORIZATION_ERROR    ERRORS = "jwt authorization error (auth service)"
+	REDIS_ERROR                ERRORS = "redis error (auth service)"
+
+	SERVER_INFO INFO = "server info (auth service)"
 )

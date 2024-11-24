@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"os"
 	"strings"
 
@@ -14,7 +15,7 @@ import (
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func setupAdminEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption, service *config.Service) {
+func setupAdminEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption, service *config.Service, Kafka *config.KafkaWriters) {
 	err := gen.RegisterAdminAuthHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{service.Host, service.Port}, ":"), dialOpts)
 	if err != nil {
 		Kafka.Error.WriteMessages(ctx, kafka.Message{
@@ -25,7 +26,7 @@ func setupAdminEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts [
 	}
 }
 
-func setupBooksEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption, service *config.Service) {
+func setupBooksEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption, service *config.Service, Kafka *config.KafkaWriters) {
 	err := gen.RegisterBooksHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{service.Host, service.Port}, ":"), dialOpts)
 	if err != nil {
 		Kafka.Error.WriteMessages(ctx, kafka.Message{
@@ -45,7 +46,7 @@ func setupBooksEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts [
 	}
 }
 
-func setupUserEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption, service *config.Service) {
+func setupUserEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption, service *config.Service, Kafka *config.KafkaWriters) {
 	err := gen.RegisterUserAuthHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{service.Host, service.Port}, ":"), dialOpts)
 	if err != nil {
 		Kafka.Error.WriteMessages(ctx, kafka.Message{
@@ -67,8 +68,10 @@ func setupUserEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []
 func setup(gw *gwruntime.ServeMux, app *config.Application) {
 	ctx := context.Background()
 	dialOpts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
+	fmt.Println("starting setup")
+	setupAdminEndpoints(ctx, gw, dialOpts, &app.Admin, app.Kafka)
+	setupBooksEndpoints(ctx, gw, dialOpts, &app.Books, app.Kafka)
+	setupUserEndpoints(ctx, gw, dialOpts, &app.User, app.Kafka)
 
-	setupAdminEndpoints(ctx, gw, dialOpts, &app.Admin)
-	setupBooksEndpoints(ctx, gw, dialOpts, &app.Books)
-	setupUserEndpoints(ctx, gw, dialOpts, &app.User)
+	fmt.Println("running setup")
 }

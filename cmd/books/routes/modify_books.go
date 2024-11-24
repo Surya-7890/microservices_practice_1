@@ -30,7 +30,7 @@ func (m *ModifyBooksService) NewBook(ctx context.Context, req *gen.NewBookReques
 		res.Status = RESPONSE_FAILURE
 		m.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.AUTH_ERROR),
-			Value: []byte("invalid header"),
+			Value: []byte("[books-service]: invalid header"),
 		})
 		return res, status.Error(codes.InvalidArgument, "invalid header")
 	}
@@ -39,7 +39,7 @@ func (m *ModifyBooksService) NewBook(ctx context.Context, req *gen.NewBookReques
 	if len(errors) != 0 {
 		m.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.AUTH_ERROR),
-			Value: []byte(strings.Join(errors, " ")),
+			Value: []byte("[books-service]: " + strings.Join(errors, " ")),
 		})
 		return res, status.Error(codes.PermissionDenied, strings.Join(errors, ", "))
 	}
@@ -49,7 +49,7 @@ func (m *ModifyBooksService) NewBook(ctx context.Context, req *gen.NewBookReques
 		res.Status = RESPONSE_FAILURE
 		m.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.AUTH_ERROR),
-			Value: []byte("operation not permitted for the user"),
+			Value: []byte("[books-service]: operation not permitted for the user"),
 		})
 		return res, status.Error(codes.Unauthenticated, "operation not permitted")
 	}
@@ -62,7 +62,7 @@ func (m *ModifyBooksService) NewBook(ctx context.Context, req *gen.NewBookReques
 		res.Status = RESPONSE_FAILURE
 		m.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.AUTH_ERROR),
-			Value: []byte("book name is required for creation"),
+			Value: []byte("[books-service]: book name is required for creation"),
 		})
 		return res, status.Error(codes.InvalidArgument, "book name is required")
 	}
@@ -71,7 +71,7 @@ func (m *ModifyBooksService) NewBook(ctx context.Context, req *gen.NewBookReques
 		res.Status = RESPONSE_FAILURE
 		m.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.AUTH_ERROR),
-			Value: []byte("author name is required for creation"),
+			Value: []byte("[books-service]: author name is required for creation"),
 		})
 		return res, status.Error(codes.InvalidArgument, "author name is required")
 	}
@@ -87,7 +87,7 @@ func (m *ModifyBooksService) NewBook(ctx context.Context, req *gen.NewBookReques
 		res.Status = RESPONSE_FAILURE
 		m.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.AUTH_ERROR),
-			Value: []byte(tx.Error.Error()),
+			Value: []byte("[books-service]: " + tx.Error.Error()),
 		})
 		return res, status.Errorf(codes.Internal, "error while creating book %s", tx.Error.Error())
 	}
@@ -96,7 +96,7 @@ func (m *ModifyBooksService) NewBook(ctx context.Context, req *gen.NewBookReques
 		res.Status = RESPONSE_FAILURE
 		m.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.AUTH_ERROR),
-			Value: []byte("error while creating book"),
+			Value: []byte("[books-service]: error while creating book"),
 		})
 		return res, status.Error(codes.Internal, "error while creating book")
 	}
@@ -112,7 +112,7 @@ func (m *ModifyBooksService) DeleteBooks(ctx context.Context, req *gen.DeleteBoo
 		res.Status = RESPONSE_FAILURE
 		m.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.AUTH_ERROR),
-			Value: []byte("invalid header"),
+			Value: []byte("[books-service]: invalid header"),
 		})
 		return res, status.Error(codes.InvalidArgument, "invalid header")
 	}
@@ -121,7 +121,7 @@ func (m *ModifyBooksService) DeleteBooks(ctx context.Context, req *gen.DeleteBoo
 	if len(errors) != 0 {
 		m.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.AUTH_ERROR),
-			Value: []byte(strings.Join(errors, " ")),
+			Value: []byte("[books-service]: " + strings.Join(errors, " ")),
 		})
 		return res, status.Error(codes.PermissionDenied, strings.Join(errors, ", "))
 	}
@@ -131,7 +131,7 @@ func (m *ModifyBooksService) DeleteBooks(ctx context.Context, req *gen.DeleteBoo
 		res.Status = RESPONSE_FAILURE
 		m.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.AUTH_ERROR),
-			Value: []byte("operation not permitted"),
+			Value: []byte("[books-service]: operation not permitted"),
 		})
 		return res, status.Error(codes.Unauthenticated, "operation not permitted")
 	}
@@ -140,7 +140,7 @@ func (m *ModifyBooksService) DeleteBooks(ctx context.Context, req *gen.DeleteBoo
 		res.Status = RESPONSE_FAILURE
 		m.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.AUTH_ERROR),
-			Value: []byte(err.Error()),
+			Value: []byte("[books-service]: " + err.Error()),
 		})
 		return res, status.Errorf(codes.Internal, "error while deleting book %s", err.Error())
 	}
@@ -156,7 +156,7 @@ func (m *ModifyBooksService) UpdateBooks(ctx context.Context, req *gen.UpdateBoo
 		res.Status = RESPONSE_FAILURE
 		m.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.AUTH_ERROR),
-			Value: []byte("invalid header"),
+			Value: []byte("[books-service]: invalid header"),
 		})
 		return res, status.Error(codes.InvalidArgument, "invalid header")
 	}
@@ -165,7 +165,7 @@ func (m *ModifyBooksService) UpdateBooks(ctx context.Context, req *gen.UpdateBoo
 	if len(errors) != 0 {
 		m.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.AUTH_ERROR),
-			Value: []byte(strings.Join(errors, " ")),
+			Value: []byte("[books-service]: " + strings.Join(errors, " ")),
 		})
 		return res, status.Error(codes.PermissionDenied, strings.Join(errors, ", "))
 	}
@@ -176,7 +176,7 @@ func (m *ModifyBooksService) UpdateBooks(ctx context.Context, req *gen.UpdateBoo
 		res.Status = RESPONSE_FAILURE
 		m.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.AUTH_ERROR),
-			Value: []byte("operation not permitted"),
+			Value: []byte("[books-service]: operation not permitted"),
 		})
 		return res, status.Error(codes.Unauthenticated, "operation not permitted")
 	}
@@ -200,7 +200,7 @@ func (m *ModifyBooksService) UpdateBooks(ctx context.Context, req *gen.UpdateBoo
 		res.Status = RESPONSE_FAILURE
 		m.Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.AUTH_ERROR),
-			Value: []byte(err.Error()),
+			Value: []byte("[books-service]: " + err.Error()),
 		})
 		return res, status.Errorf(codes.Internal, "error while updating book %s", err.Error())
 	}
