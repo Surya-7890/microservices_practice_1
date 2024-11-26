@@ -20,3 +20,4 @@ kafka:
     warning: warning-log
 
 redis: redis:6379
+port: :10000

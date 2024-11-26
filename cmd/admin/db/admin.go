@@ -1,8 +1,12 @@
 package db
 
 import (
+	"context"
 	"fmt"
 
+	"github.com/Surya-7890/book_store/admin/config"
+	"github.com/Surya-7890/book_store/admin/utils"
+	"github.com/segmentio/kafka-go"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -33,10 +37,17 @@ func (a *Admin) IsCorrectPassword(password string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(a.Password), []byte(password)) == nil
 }
 
-func (a *Admin) AlreadyExists(db *gorm.DB) bool {
+func (a *Admin) AlreadyExists(Kafka *config.KafkaWriters, db *gorm.DB) bool {
 	var count int64
 	if err := db.Model(&Admin{}).Where("username = ?", a.Username).Count(&count).Error; err != nil {
-		panic(err)
+		err_ := Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(utils.DB_ERROR),
+			Value: []byte(err.Error()),
+		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
+		return false
 	}
 	return count > 0
 }

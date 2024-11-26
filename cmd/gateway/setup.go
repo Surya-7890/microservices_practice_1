@@ -2,59 +2,89 @@ package main
 
 import (
 	"context"
+	"fmt"
+	"os"
 	"strings"
 
+	"github.com/Surya-7890/book_store/gateway/config"
 	"github.com/Surya-7890/book_store/gateway/gen"
+	"github.com/Surya-7890/book_store/gateway/utils"
 	gwruntime "github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
-	"github.com/spf13/viper"
+	"github.com/segmentio/kafka-go"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
 )
 
-func setupAdminEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption) {
-	admin_host := viper.GetString("admin.host")
-	admin_port := viper.GetString("admin.port")
-
-	err := gen.RegisterAdminAuthHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{admin_host, admin_port}, ":"), dialOpts)
+func setupAdminEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption, service *config.Service, Kafka *config.KafkaWriters) {
+	err := gen.RegisterAdminAuthHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{service.Host, service.Port}, ":"), dialOpts)
 	if err != nil {
-		panic(err)
+		err_ := Kafka.Error.WriteMessages(ctx, kafka.Message{
+			Key:   []byte(utils.HANDLER_REGISTRATION_ERROR),
+			Value: []byte(err.Error()),
+		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
+		os.Exit(1)
 	}
 }
 
-func setupBooksEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption) {
-	books_host := viper.GetString("books.host")
-	books_port := viper.GetString("books.port")
-
-	err := gen.RegisterBooksHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{books_host, books_port}, ":"), dialOpts)
+func setupBooksEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption, service *config.Service, Kafka *config.KafkaWriters) {
+	err := gen.RegisterBooksHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{service.Host, service.Port}, ":"), dialOpts)
 	if err != nil {
-		panic(err)
+		err_ := Kafka.Error.WriteMessages(ctx, kafka.Message{
+			Key:   []byte(utils.HANDLER_REGISTRATION_ERROR),
+			Value: []byte(err.Error()),
+		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
+		os.Exit(1)
 	}
 
-	err = gen.RegisterModifyBooksHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{books_host, books_port}, ":"), dialOpts)
+	err = gen.RegisterModifyBooksHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{service.Host, service.Port}, ":"), dialOpts)
 	if err != nil {
-		panic(err)
-	}
-}
-
-func setupUserEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption) {
-	user_host := viper.GetString("user.host")
-	user_port := viper.GetString("user.port")
-
-	err := gen.RegisterUserAuthHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{user_host, user_port}, ":"), dialOpts)
-	if err != nil {
-		panic(err)
-	}
-	err = gen.RegisterUserProfileHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{user_host, user_port}, ":"), dialOpts)
-	if err != nil {
-		panic(err)
+		err_ := Kafka.Error.WriteMessages(ctx, kafka.Message{
+			Key:   []byte(utils.HANDLER_REGISTRATION_ERROR),
+			Value: []byte(err.Error()),
+		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
+		os.Exit(1)
 	}
 }
 
-func setup(gw *gwruntime.ServeMux) {
+func setupUserEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption, service *config.Service, Kafka *config.KafkaWriters) {
+	err := gen.RegisterUserAuthHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{service.Host, service.Port}, ":"), dialOpts)
+	if err != nil {
+		err_ := Kafka.Error.WriteMessages(ctx, kafka.Message{
+			Key:   []byte(utils.HANDLER_REGISTRATION_ERROR),
+			Value: []byte(err.Error()),
+		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
+		os.Exit(1)
+	}
+	err = gen.RegisterUserProfileHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{service.Host, service.Port}, ":"), dialOpts)
+	if err != nil {
+		err_ := Kafka.Error.WriteMessages(ctx, kafka.Message{
+			Key:   []byte(utils.HANDLER_REGISTRATION_ERROR),
+			Value: []byte(err.Error()),
+		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
+		os.Exit(1)
+	}
+}
+
+func setup(gw *gwruntime.ServeMux, app *config.Application) {
 	ctx := context.Background()
 	dialOpts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
 
-	setupAdminEndpoints(ctx, gw, dialOpts)
-	setupBooksEndpoints(ctx, gw, dialOpts)
-	setupUserEndpoints(ctx, gw, dialOpts)
+	setupAdminEndpoints(ctx, gw, dialOpts, &app.Admin, app.Kafka)
+	setupBooksEndpoints(ctx, gw, dialOpts, &app.Books, app.Kafka)
+	setupUserEndpoints(ctx, gw, dialOpts, &app.User, app.Kafka)
 }
