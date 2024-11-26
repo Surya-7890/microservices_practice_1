@@ -25,31 +25,43 @@ func getPostgresConnectionString(cfg *config.DBConfig) (string, error) {
 func ConnectToPostgres(Kafka *config.KafkaWriters, cfg *config.DBConfig) *gorm.DB {
 	postgres_uri, err := getPostgresConnectionString(cfg)
 	if err != nil {
-		Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+		err_ := Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.DB_ERROR),
 			Value: []byte(err.Error()),
 		})
+		if err_ != nil {
+			fmt.Println(err_)
+		}
 		panic(err)
 	}
 	db, err := gorm.Open(postgres.Open(postgres_uri))
 	if err != nil {
-		Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+		err_ := Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.DB_ERROR),
 			Value: []byte(err.Error()),
 		})
+		if err_ != nil {
+			fmt.Println(err_)
+		}
 		panic(err)
 	}
 	if err := db.AutoMigrate(&Book{}); err != nil {
-		Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+		err_ := Kafka.Error.WriteMessages(context.Background(), kafka.Message{
 			Key:   []byte(utils.DB_ERROR),
 			Value: []byte(err.Error()),
 		})
+		if err_ != nil {
+			fmt.Println(err_)
+		}
 		panic(err)
 	}
 
-	Kafka.Info.WriteMessages(context.Background(), kafka.Message{
+	err = Kafka.Info.WriteMessages(context.Background(), kafka.Message{
 		Key:   []byte(utils.DB_INFO),
 		Value: []byte("[books-service]: connected to postgres"),
 	})
+	if err != nil {
+		fmt.Println(err)
+	}
 	return db
 }

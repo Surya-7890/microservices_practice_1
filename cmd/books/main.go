@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net"
 
 	"github.com/Surya-7890/book_store/books/config"
@@ -33,15 +34,24 @@ func main() {
 	DB := db.ConnectToPostgres(App.Kafka, &App.DatabaseConfig)
 
 	server := grpc.NewServer()
-	gen.RegisterBooksServer(server, &routes.BooksService{DB: DB})
-	gen.RegisterModifyBooksServer(server, &routes.ModifyBooksService{DB: DB})
+	gen.RegisterBooksServer(server, &routes.BooksService{
+		DB:    DB,
+		Kafka: App.Kafka,
+	})
+	gen.RegisterModifyBooksServer(server, &routes.ModifyBooksService{
+		DB:    DB,
+		Kafka: App.Kafka,
+	})
 
 	reflection.Register(server)
 
-	App.Kafka.Info.WriteMessages(context.Background(), _kafka.Message{
+	err_ := App.Kafka.Info.WriteMessages(context.Background(), _kafka.Message{
 		Key:   []byte(utils.SERVER_INFO),
 		Value: []byte("[books-service]: running server... on port: " + App.Port),
 	})
+	if err_ != nil {
+		fmt.Println(err_.Error())
+	}
 
 	err = server.Serve(listener)
 	if err != nil {

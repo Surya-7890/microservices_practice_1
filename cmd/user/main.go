@@ -47,10 +47,13 @@ func main() {
 
 	reflection.Register(server)
 
-	App.Kafka.Info.WriteMessages(context.Background(), _kafka.Message{
+	err_ := App.Kafka.Info.WriteMessages(context.Background(), _kafka.Message{
 		Key:   []byte(utils.SERVER_INFO),
 		Value: []byte("[user-service]: running server... on port: " + App.Port),
 	})
+	if err_ != nil {
+		fmt.Println(err_.Error())
+	}
 
 	err = server.Serve(listener)
 	if err != nil {

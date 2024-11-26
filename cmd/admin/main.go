@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"fmt"
 	"net"
 
 	"github.com/Surya-7890/book_store/admin/config"
@@ -33,13 +34,21 @@ func main() {
 	DB := db.ConnectToPostgres(App.Kafka, &App.DatabaseConfig)
 
 	server := grpc.NewServer()
-	gen.RegisterAdminAuthServer(server, &routes.AdminAuthService{DB: DB})
+	gen.RegisterAdminAuthServer(server, &routes.AdminAuthService{
+		DB:    DB,
+		Kafka: App.Kafka,
+	})
 
 	reflection.Register(server)
-	App.Kafka.Info.WriteMessages(context.Background(), _kafka.Message{
+	err = App.Kafka.Info.WriteMessages(context.Background(), _kafka.Message{
 		Key:   []byte(utils.SERVER_INFO),
 		Value: []byte("[admin-service]: running server... on port: " + App.Port),
 	})
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
 	err = server.Serve(listener)
 	if err != nil {
 		panic(err)

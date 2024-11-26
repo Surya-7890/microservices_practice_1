@@ -3,6 +3,7 @@ package db
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"github.com/Surya-7890/book_store/admin/config"
 	"github.com/Surya-7890/book_store/admin/utils"
@@ -25,18 +26,42 @@ func getPostgresConnectionString(cfg *config.DBConfig) (string, error) {
 func ConnectToPostgres(Kafka *config.KafkaWriters, cfg *config.DBConfig) *gorm.DB {
 	postgres_uri, err := getPostgresConnectionString(cfg)
 	if err != nil {
-		panic(err)
+		err_ := Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(utils.DB_ERROR),
+			Value: []byte(err.Error()),
+		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
+		os.Exit(1)
 	}
 	db, err := gorm.Open(postgres.Open(postgres_uri))
 	if err != nil {
-		panic(err)
+		err_ := Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(utils.DB_ERROR),
+			Value: []byte(err.Error()),
+		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
+		os.Exit(1)
 	}
 	if err := db.AutoMigrate(&Admin{}); err != nil {
-		panic(err)
+		err_ := Kafka.Error.WriteMessages(context.Background(), kafka.Message{
+			Key:   []byte(utils.DB_ERROR),
+			Value: []byte(err.Error()),
+		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
+		os.Exit(1)
 	}
-	Kafka.Info.WriteMessages(context.Background(), kafka.Message{
+	err_ := Kafka.Info.WriteMessages(context.Background(), kafka.Message{
 		Key:   []byte(utils.DB_INFO),
 		Value: []byte("[user-service]: connected to postgres"),
 	})
+	if err_ != nil {
+		fmt.Println(err_.Error())
+	}
 	return db
 }

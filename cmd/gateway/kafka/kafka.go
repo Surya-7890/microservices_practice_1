@@ -2,6 +2,7 @@ package kafka
 
 import (
 	"fmt"
+	"log"
 	"reflect"
 	"time"
 
@@ -65,10 +66,15 @@ func CreateWriters(cfg *config.KafkaConfig) *config.KafkaWriters {
 	for i := 0; i < _type.NumField(); i++ {
 		topic := _value.Field(i).String()
 		writer := createNewWriter(cfg, topic)
+		if writer == nil {
+			log.Fatal("writer is nil")
+		}
 
 		field := _elem.FieldByName(_type.Field(i).Name)
 		if field.IsValid() && field.CanSet() {
 			field.Set(reflect.ValueOf(writer))
+		} else {
+			log.Fatal("couldnt load kafka")
 		}
 	}
 	return _return

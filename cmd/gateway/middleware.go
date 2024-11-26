@@ -35,19 +35,25 @@ func storeInRedis[T utils.AuthResponse](id int32, key string, user T, role strin
 
 	token_string, err := token.SignedString([]byte(key))
 	if err != nil {
-		Kafka.Error.WriteMessages(ctx, kafka.Message{
+		err_ := Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.JWT_AUTHORIZATION_ERROR),
 			Value: []byte(err.Error()),
 		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
 		return "", err
 	}
 
 	user_bytes, err := json.Marshal(user)
 	if err != nil {
-		Kafka.Error.WriteMessages(ctx, kafka.Message{
+		err_ := Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.JWT_AUTHORIZATION_ERROR),
 			Value: []byte(err.Error()),
 		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
 		return "", err
 	}
 
@@ -61,10 +67,13 @@ func storeInRedis[T utils.AuthResponse](id int32, key string, user T, role strin
 	}
 
 	if err := db.Set(ctx, id_string, user_bytes, 0).Err(); err != nil {
-		Kafka.Error.WriteMessages(ctx, kafka.Message{
+		err_ := Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.JWT_AUTHORIZATION_ERROR),
 			Value: []byte(err.Error()),
 		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
 		return "", err
 	}
 
@@ -118,57 +127,75 @@ func (m *Middleware) requestInterceptor(ctx context.Context, req *http.Request) 
 	authHeader := req.Header.Get("Authorization")
 
 	if len(authHeader) == 0 || !strings.HasPrefix(authHeader, "Bearer ") {
-		m.Kafka.Error.WriteMessages(ctx, kafka.Message{
+		err_ := m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.JWT_AUTHORIZATION_ERROR),
 			Value: []byte("missing header"),
 		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
 		return metadata.Pairs(utils.AUTH_ERROR, "missing header")
 	}
 
 	token_string := strings.TrimPrefix(authHeader, "Bearer ")
 
 	if len(token_string) == 0 {
-		m.Kafka.Error.WriteMessages(ctx, kafka.Message{
+		err_ := m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.JWT_AUTHORIZATION_ERROR),
 			Value: []byte("missing token"),
 		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
 		return metadata.Pairs(utils.AUTH_ERROR, "missing token")
 	}
 
 	token, err := jwt.Parse(token_string, func(t *jwt.Token) (interface{}, error) {
 		if _, ok := t.Method.(*jwt.SigningMethodHMAC); !ok {
-			m.Kafka.Error.WriteMessages(ctx, kafka.Message{
+			err_ := m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 				Key:   []byte(utils.JWT_AUTHORIZATION_ERROR),
 				Value: []byte("error while parsing token, unexpected signing method"),
 			})
+			if err_ != nil {
+				fmt.Println(err_.Error())
+			}
 			return nil, fmt.Errorf("error while parsing token, unexpected signing method")
 		}
 		return []byte(m.Key), nil
 	})
 
 	if err != nil {
-		m.Kafka.Error.WriteMessages(ctx, kafka.Message{
+		err_ := m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.JWT_AUTHORIZATION_ERROR),
 			Value: []byte("error while parsing token " + err.Error()),
 		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
 		return metadata.Pairs(utils.AUTH_ERROR, "error while parsing token")
 	}
 
 	claims, ok := token.Claims.(jwt.MapClaims)
 	if !ok || !token.Valid {
-		m.Kafka.Error.WriteMessages(ctx, kafka.Message{
+		err_ := m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.JWT_AUTHORIZATION_ERROR),
 			Value: []byte("invalid token claims"),
 		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
 		return metadata.Pairs(utils.AUTH_ERROR, "invalid token claims")
 	}
 
 	id, ok := claims["id"]
 	if !ok {
-		m.Kafka.Error.WriteMessages(ctx, kafka.Message{
+		err_ := m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.JWT_AUTHORIZATION_ERROR),
 			Value: []byte("invalid key id for jwt claims"),
 		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
 		return metadata.Pairs(utils.AUTH_ERROR, "invalid jwt claims")
 	}
 
@@ -180,33 +207,45 @@ func (m *Middleware) requestInterceptor(ctx context.Context, req *http.Request) 
 	if strings.Contains(path, utils.AdminRoutes) && req.Method != http.MethodGet {
 		role, ok := claims["role"]
 		if !ok {
-			m.Kafka.Error.WriteMessages(ctx, kafka.Message{
+			err_ := m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 				Key:   []byte(utils.JWT_AUTHORIZATION_ERROR),
 				Value: []byte("unauthorized"),
 			})
+			if err_ != nil {
+				fmt.Println(err_.Error())
+			}
 			return metadata.Pairs(utils.AUTH_ERROR, "unauthorized")
 		}
 		roleStr, ok := role.(string)
 		if !ok {
-			m.Kafka.Error.WriteMessages(ctx, kafka.Message{
+			err_ := m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 				Key:   []byte(utils.JWT_AUTHORIZATION_ERROR),
 				Value: []byte("invalid role format"),
 			})
+			if err_ != nil {
+				fmt.Println(err_.Error())
+			}
 			return metadata.Pairs(utils.AUTH_ERROR, "invalid role format")
 		}
 		if roleStr != utils.ROLE_ADMIN {
-			m.Kafka.Error.WriteMessages(ctx, kafka.Message{
+			err_ := m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 				Key:   []byte(utils.JWT_AUTHORIZATION_ERROR),
 				Value: []byte("unauthorized, requires admin privilege"),
 			})
+			if err_ != nil {
+				fmt.Println(err_.Error())
+			}
 			return metadata.Pairs(utils.AUTH_ERROR, "unauthorized")
 		}
 		user, err := Redis.AdminDB.Get(ctx, id_string).Result()
 		if err == redis.Nil {
-			m.Kafka.Error.WriteMessages(ctx, kafka.Message{
+			err_ := m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 				Key:   []byte(utils.REDIS_ERROR),
 				Value: []byte(err.Error()),
 			})
+			if err_ != nil {
+				fmt.Println(err_.Error())
+			}
 			return metadata.Pairs(utils.AUTH_ERROR, err.Error())
 		}
 		if err == nil {
@@ -215,30 +254,39 @@ func (m *Middleware) requestInterceptor(ctx context.Context, req *http.Request) 
 			map_["role"] = string(utils.ROLE_ADMIN)
 			return metadata.New(map_)
 		} else if err != redis.Nil {
-			m.Kafka.Error.WriteMessages(ctx, kafka.Message{
+			err_ := m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 				Key:   []byte(utils.REDIS_ERROR),
 				Value: []byte(err.Error()),
 			})
+			if err_ != nil {
+				fmt.Println(err_.Error())
+			}
 			return metadata.Pairs(utils.AUTH_ERROR, err.Error())
 		}
 	}
 
 	user, err := Redis.UserDB.Get(ctx, id_string).Result()
 	if err == redis.Nil {
-		m.Kafka.Error.WriteMessages(ctx, kafka.Message{
+		err_ := m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.REDIS_ERROR),
 			Value: []byte(err.Error()),
 		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
 		return metadata.Pairs(utils.AUTH_ERROR, err.Error())
 	} else if err == nil {
 		map_["user"] = user
 		map_["role"] = string(utils.ROLE_USER)
 		return metadata.New(map_)
 	} else if err != redis.Nil {
-		m.Kafka.Error.WriteMessages(ctx, kafka.Message{
+		err_ := m.Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.REDIS_ERROR),
 			Value: []byte(err.Error()),
 		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
 		return metadata.Pairs(utils.AUTH_ERROR, err.Error())
 	}
 

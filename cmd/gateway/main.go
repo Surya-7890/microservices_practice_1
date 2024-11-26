@@ -23,6 +23,7 @@ func init() {
 	App = config.LoadConfig()
 	_kafka.CreateTopics(&App.KafkaConfig)
 	Redis = redis.ConnectToRedis(App.Redis)
+	App.Kafka = _kafka.CreateWriters(&App.KafkaConfig)
 }
 
 func main() {
@@ -30,9 +31,7 @@ func main() {
 		Key:   App.JWT_SECRET,
 		Kafka: App.Kafka,
 	}
-	go func(cfg *config.KafkaConfig, App *config.Application) {
-		App.Kafka = _kafka.CreateWriters(cfg)
-	}(&App.KafkaConfig, App)
+
 	gw := gwruntime.NewServeMux([]gwruntime.ServeMuxOption{
 		gwruntime.WithMetadata(mw.requestInterceptor),
 		gwruntime.WithForwardResponseOption(mw.responseInterceptor),

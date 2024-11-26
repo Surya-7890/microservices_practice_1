@@ -18,10 +18,13 @@ import (
 func setupAdminEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption, service *config.Service, Kafka *config.KafkaWriters) {
 	err := gen.RegisterAdminAuthHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{service.Host, service.Port}, ":"), dialOpts)
 	if err != nil {
-		Kafka.Error.WriteMessages(ctx, kafka.Message{
+		err_ := Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.HANDLER_REGISTRATION_ERROR),
 			Value: []byte(err.Error()),
 		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
 		os.Exit(1)
 	}
 }
@@ -29,19 +32,25 @@ func setupAdminEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts [
 func setupBooksEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption, service *config.Service, Kafka *config.KafkaWriters) {
 	err := gen.RegisterBooksHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{service.Host, service.Port}, ":"), dialOpts)
 	if err != nil {
-		Kafka.Error.WriteMessages(ctx, kafka.Message{
+		err_ := Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.HANDLER_REGISTRATION_ERROR),
 			Value: []byte(err.Error()),
 		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
 		os.Exit(1)
 	}
 
 	err = gen.RegisterModifyBooksHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{service.Host, service.Port}, ":"), dialOpts)
 	if err != nil {
-		Kafka.Error.WriteMessages(ctx, kafka.Message{
+		err_ := Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.HANDLER_REGISTRATION_ERROR),
 			Value: []byte(err.Error()),
 		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
 		os.Exit(1)
 	}
 }
@@ -49,18 +58,24 @@ func setupBooksEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts [
 func setupUserEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []grpc.DialOption, service *config.Service, Kafka *config.KafkaWriters) {
 	err := gen.RegisterUserAuthHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{service.Host, service.Port}, ":"), dialOpts)
 	if err != nil {
-		Kafka.Error.WriteMessages(ctx, kafka.Message{
+		err_ := Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.HANDLER_REGISTRATION_ERROR),
 			Value: []byte(err.Error()),
 		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
 		os.Exit(1)
 	}
 	err = gen.RegisterUserProfileHandlerFromEndpoint(context.WithoutCancel(ctx), gw, strings.Join([]string{service.Host, service.Port}, ":"), dialOpts)
 	if err != nil {
-		Kafka.Error.WriteMessages(ctx, kafka.Message{
+		err_ := Kafka.Error.WriteMessages(ctx, kafka.Message{
 			Key:   []byte(utils.HANDLER_REGISTRATION_ERROR),
 			Value: []byte(err.Error()),
 		})
+		if err_ != nil {
+			fmt.Println(err_.Error())
+		}
 		os.Exit(1)
 	}
 }
@@ -68,10 +83,8 @@ func setupUserEndpoints(ctx context.Context, gw *gwruntime.ServeMux, dialOpts []
 func setup(gw *gwruntime.ServeMux, app *config.Application) {
 	ctx := context.Background()
 	dialOpts := []grpc.DialOption{grpc.WithTransportCredentials(insecure.NewCredentials())}
-	fmt.Println("starting setup")
+
 	setupAdminEndpoints(ctx, gw, dialOpts, &app.Admin, app.Kafka)
 	setupBooksEndpoints(ctx, gw, dialOpts, &app.Books, app.Kafka)
 	setupUserEndpoints(ctx, gw, dialOpts, &app.User, app.Kafka)
-
-	fmt.Println("running setup")
 }

@@ -15,7 +15,7 @@ type User struct {
 	Password string `json:"password"`
 }
 
-func (u *User) BeforeSave(db *gorm.DB) error {
+func (u *User) HashPassword() error {
 	password := u.Password
 	if len(password) < 8 {
 		return fmt.Errorf("password should have a mininum length of 8")
